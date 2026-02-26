@@ -429,7 +429,7 @@ export default function DashboardPage() {
                                     <div className="p-8 text-center text-slate-400 text-sm">No active conversations yet. Reach out to a match to start chatting.</div>
                                 ) : (
                                     chats.map(chat => {
-                                        const otherUserId = chat.participants.find((id: string) => id !== user.uid);
+                                        const otherUserId = chat.participants?.find((id: string) => id !== user.uid);
                                         const otherUserName = chat.users?.[otherUserId] || "Unknown User";
                                         return (
                                             <div
@@ -466,7 +466,7 @@ export default function DashboardPage() {
                                             </button>
                                             <div className="flex-1 min-w-0">
                                                 <h3 className="font-bold text-slate-800 dark:text-slate-100 truncate flex items-center">
-                                                    {activeChat.users?.[activeChat.participants.find((id: string) => id !== user.uid)] || "User"}
+                                                    {activeChat.users?.[activeChat.participants?.find((id: string) => id !== user.uid)] || "User"}
                                                     {activeChat.donorId && activeChat.donorId !== user.uid && activeChat.donorBloodGroup && (
                                                         <span className="ml-2 text-[10px] bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-0.5 rounded-full font-bold border border-red-200 dark:border-red-800 uppercase tracking-wider">
                                                             Donor: {activeChat.donorBloodGroup}
