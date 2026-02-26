@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { collection, addDoc, query, onSnapshot, orderBy, where, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
-import { MapPin, Search, AlertCircle, Phone, Clock, PlusCircle, Loader2, UserCircle, Hand, Bell, MessageCircle, Send, Building2, Droplet } from "lucide-react";
+import { MapPin, Search, AlertCircle, Phone, Clock, PlusCircle, Loader2, UserCircle, Hand, Bell, MessageCircle, Send, Building2, Droplet, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "./context";
 
@@ -205,15 +205,33 @@ export default function DashboardPage() {
         }
     };
 
+    const handleCloseRequest = async (requestId: string) => {
+        if (!confirm("Are you sure you want to close this request? This means you have received the required blood.")) return;
+        try {
+            const { doc, updateDoc } = await import("firebase/firestore");
+            await updateDoc(doc(db, "Requests", requestId), {
+                status: "fulfilled",
+                updatedAt: serverTimestamp()
+            });
+            alert("Request marked as fulfilled.");
+        } catch (err: any) {
+            alert("Error closing request: " + err.message);
+        }
+    };
+
     const filteredRequests = requests.filter(req => {
         const matchesGroup = filterGroup === "All" || req.bloodGroup === filterGroup;
         const matchesSearch = req.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
             (req.patientName && req.patientName.toLowerCase().includes(searchQuery.toLowerCase()));
 
         // If the tab is "my-requests", filter strictly to User's requests.
+        // Show all of their requests, even fulfilled ones.
         if (activeTab === "my-requests") {
             return req.requesterId === user?.uid && matchesGroup && matchesSearch;
         }
+
+        // Hide fulfilled requests from public feeds
+        if (req.status !== "active") return false;
 
         // If the tab is "matches" for donors, only show requests matching their registered blood type.
         if (activeTab === "matches") {
