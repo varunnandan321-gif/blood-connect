@@ -5,6 +5,7 @@ import { collection, addDoc, query, onSnapshot, orderBy, where, serverTimestamp 
 import { db } from "@/lib/firebase/config";
 import { MapPin, Search, AlertCircle, Phone, Clock, PlusCircle, Loader2, UserCircle, Hand, Bell, MessageCircle, Send, Building2, Droplet } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "./context";
 
 // Custom hook to track previous state for notifications
 function usePrevious(value: any) {
@@ -16,7 +17,12 @@ function usePrevious(value: any) {
     return refSync.current;
 }
 
-export default function DashboardPage({ user, userData }: any) {
+export default function DashboardPage() {
+    const { user, userData } = useAuth();
+
+    // Safety check - though layout protects it, type safety ensures user exists before rendering this client component fully
+    if (!user) return null;
+
     const [activeTab, setActiveTab] = useState("feed"); // 'feed' | 'my-requests' | 'matches' | 'messages' | 'profile' | 'facilities'
     const [requests, setRequests] = useState<any[]>([]);
     const [facilities, setFacilities] = useState<any[]>([]);

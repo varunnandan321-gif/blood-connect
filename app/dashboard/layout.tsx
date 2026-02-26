@@ -7,6 +7,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { Loader2, LogOut, Droplet, User as UserIcon, Activity } from "lucide-react";
 import Link from "next/link";
+import { AuthContext } from "./context";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
@@ -77,7 +78,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             {/* Main Content Area */}
             <main className="flex-1 p-6 md:p-12 max-w-7xl mx-auto w-full flex flex-col gap-6">
-                {React.cloneElement(children as React.ReactElement<any>, { user, userData })}
+                <AuthContext.Provider value={{ user, userData }}>
+                    {children}
+                </AuthContext.Provider>
             </main>
 
         </div>
