@@ -99,9 +99,16 @@ export default function DashboardPage() {
     // Fetch User's Chats
     useEffect(() => {
         if (!user) return;
-        const q = query(collection(db, "Chats"), where("participants", "array-contains", user.uid), orderBy("updatedAt", "desc"));
+        const q = query(collection(db, "Chats"), where("participants", "array-contains", user.uid));
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            setChats(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+            const rawChats = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            // Sort locally to avoid needing a Firestore Composite Index
+            rawChats.sort((a: any, b: any) => {
+                const timeA = a.updatedAt?.toMillis() || 0;
+                const timeB = b.updatedAt?.toMillis() || 0;
+                return timeB - timeA;
+            });
+            setChats(rawChats);
         });
         return () => unsubscribe();
     }, [user]);
@@ -226,7 +233,7 @@ export default function DashboardPage() {
 
     const initiateChat = async (req: any) => {
         // Check if chat already exists
-        const existingChat = chats.find(c => c.requestId === req.id && c.participants.includes(user.uid) && c.participants.includes(req.requesterId));
+        const existingChat = chats.find(c => c.requestId === req.id && c.participants?.includes(user.uid) && c.participants?.includes(req.requesterId));
 
         if (existingChat) {
             setActiveTab("messages");
