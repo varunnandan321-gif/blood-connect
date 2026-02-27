@@ -23,6 +23,8 @@ export default function DashboardPage() {
     // Safety check - though layout protects it, type safety ensures user exists before rendering this client component fully
     if (!user) return null;
 
+    const isAdmin = user?.email === "varunnandan321@gmail.com";
+
     const [activeTab, setActiveTab] = useState("feed"); // 'feed' | 'my-requests' | 'matches' | 'messages' | 'profile' | 'facilities'
     const [requests, setRequests] = useState<any[]>([]);
     const [facilities, setFacilities] = useState<any[]>([]);
@@ -58,6 +60,7 @@ export default function DashboardPage() {
         available: userData?.available ?? true,
     });
     const [updatingProfile, setUpdatingProfile] = useState(false);
+    const [allUsers, setAllUsers] = useState<any[]>([]);
 
     // Notification State
     const [toastMessage, setToastMessage] = useState<{ title: string, desc: string } | null>(null);
@@ -95,6 +98,16 @@ export default function DashboardPage() {
 
         return () => unsubscribe();
     }, [user, requests.length, userData, activeTab]);
+
+    // Fetch All Users for Admin
+    useEffect(() => {
+        if (!isAdmin || activeTab !== "admin") return;
+        const q = query(collection(db, "Users"));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            setAllUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        });
+        return () => unsubscribe();
+    }, [isAdmin, activeTab]);
 
     // Fetch User's Chats
     useEffect(() => {
@@ -154,7 +167,7 @@ export default function DashboardPage() {
 
             const q = query(collection(db, "Facilities"), orderBy("name"));
             onSnapshot(q, async (snapshot) => {
-                if (snapshot.empty && user.email === "admin@demo.com") {
+                if (snapshot.empty && isAdmin) {
                     console.log("Seeding faculties...");
                     for (const fac of mockFacilities) {
                         await addDoc(collection(db, "Facilities"), fac);
@@ -217,6 +230,24 @@ export default function DashboardPage() {
         } catch (err: any) {
             alert("Error closing request: " + err.message);
         }
+    };
+
+    const deleteUserProfile = async (userId: string) => {
+        if (!confirm("Delete this user profile completely?")) return;
+        try {
+            const { doc, deleteDoc } = await import("firebase/firestore");
+            await deleteDoc(doc(db, "Users", userId));
+            alert("User profile deleted.");
+        } catch (e: any) { alert(e.message); }
+    };
+
+    const handleDeleteRequest = async (requestId: string) => {
+        if (!confirm("Force delete this request?")) return;
+        try {
+            const { doc, deleteDoc } = await import("firebase/firestore");
+            await deleteDoc(doc(db, "Requests", requestId));
+            alert("Request permanently deleted.");
+        } catch (e: any) { alert(e.message); }
     };
 
     const filteredRequests = requests.filter(req => {
@@ -372,6 +403,14 @@ export default function DashboardPage() {
                 >
                     Donor Profile
                 </button>
+                {isAdmin && (
+                    <button
+                        onClick={() => setActiveTab("admin")}
+                        className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'admin' ? 'bg-slate-900 shadow-sm text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
+                    >
+                        Admin Panel
+                    </button>
+                )}
             </div>
 
             <AnimatePresence mode="popLayout">
@@ -734,11 +773,64 @@ export default function DashboardPage() {
                                                     Mark as Fulfilled
                                                 </button>
                                             )}
+
+                                            {isAdmin && (
+                                                <button
+                                                    onClick={() => handleDeleteRequest(req.id)}
+                                                    className="bg-red-100 text-red-600 hover:bg-red-600 hover:text-white dark:bg-red-900/30 dark:hover:bg-red-600 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm"
+                                                >
+                                                    Force Delete
+                                                </button>
+                                            )}
                                         </div>
                                     </motion.div>
                                 ))}
                             </div>
                         )}
+                    </motion.div>
+                )}
+
+                {/* Admin Pane */}
+                {activeTab === "admin" && isAdmin && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 relative mb-8">
+                            <h2 className="text-2xl font-bold mb-6 flex items-center text-slate-800 dark:text-white">
+                                <UserCircle className="mr-2 w-6 h-6 text-slate-500" /> Platform Users
+                            </h2>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="border-b border-slate-200 dark:border-slate-700 text-sm">
+                                            <th className="pb-3 text-slate-500 font-semibold">User ID</th>
+                                            <th className="pb-3 text-slate-500 font-semibold px-4">Name</th>
+                                            <th className="pb-3 text-slate-500 font-semibold px-4">Group</th>
+                                            <th className="pb-3 text-slate-500 font-semibold px-4">Location</th>
+                                            <th className="pb-3 text-slate-500 text-right font-semibold">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {allUsers.map((u: any) => (
+                                            <tr key={u.id} className="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                                <td className="py-4 text-xs font-mono text-slate-400">{u.id}</td>
+                                                <td className="py-4 font-semibold text-sm px-4">{u.name || "N/A"}</td>
+                                                <td className="py-4 px-4 text-red-500 font-bold text-sm">{u.bloodGroup || "N/A"}</td>
+                                                <td className="py-4 px-4 text-sm text-slate-600 dark:text-slate-400">{u.location || "N/A"}</td>
+                                                <td className="py-4 text-right">
+                                                    <button onClick={() => deleteUserProfile(u.id)} className="text-xs bg-red-100 text-red-600 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-lg font-bold transition-colors">
+                                                        Delete Profile
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {allUsers.length === 0 && (
+                                            <tr>
+                                                <td colSpan={5} className="py-8 text-center text-sm text-slate-400">No users found.</td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </motion.div>
                 )}
 
