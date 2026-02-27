@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Droplet, Heart, Shield, Activity, ArrowRight, UserPlus, LogIn } from "lucide-react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { auth, db } from "@/lib/firebase/config";
 import { doc, setDoc } from "firebase/firestore";
-import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -46,6 +46,23 @@ export default function LandingPage() {
       }
     } catch (err: any) {
       setError(err.message || "Authentication failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!formData.email) {
+      setError("Please enter your email above first, then click 'Forgot your password?'");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      await sendPasswordResetEmail(auth, formData.email);
+      setError("Password reset email sent! Check your inbox.");
+    } catch (err: any) {
+      setError(err.message || "Failed to send reset email.");
     } finally {
       setLoading(false);
     }
@@ -167,20 +184,32 @@ export default function LandingPage() {
             {error && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
-                className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-xl text-sm font-medium border border-red-200 dark:border-red-800/50"
+                className={`${error.includes("sent!") ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-200" : "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-red-200"} p-3 rounded-xl text-sm font-medium border dark:border-red-800/50`}
               >
                 {error}
               </motion.div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all flex items-center justify-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed mt-2 shadow-lg shadow-red-600/20"
-            >
-              <span>{loading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}</span>
-              {!loading && <ArrowRight className="w-5 h-5" />}
-            </button>
+            <div className="flex flex-col space-y-3 mt-4">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all flex items-center justify-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-red-600/20"
+              >
+                <span>{loading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}</span>
+                {!loading && <ArrowRight className="w-5 h-5" />}
+              </button>
+
+              {isLogin && (
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  className="text-sm font-semibold text-slate-500 hover:text-red-600 transition-colors w-max mx-auto"
+                >
+                  Forgot your password?
+                </button>
+              )}
+            </div>
           </form>
 
           <div className="mt-8 text-center relative z-10 hidden md:block border-t border-slate-200 dark:border-slate-700 pt-6">
