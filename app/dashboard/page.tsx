@@ -202,16 +202,23 @@ export default function DashboardPage() {
         e.preventDefault();
         setUpdatingProfile(true);
         try {
-            // Update the Users document with Donor specific fields
-            const { doc, updateDoc } = await import("firebase/firestore");
+            // Using setDoc with {merge: true} ensures that if the user document is somewhat incomplete, 
+            // it safely creates/merges the donor fields instead of throwing an updateDoc "document not found" error.
+            const { doc, setDoc } = await import("firebase/firestore");
             const userRef = doc(db, "Users", user.uid);
-            await updateDoc(userRef, {
+            await setDoc(userRef, {
                 ...donorForm,
                 isRegisteredDonor: true,
                 updatedAt: serverTimestamp()
-            });
+            }, { merge: true });
+
             alert("Donor profile updated successfully! You can now receive targeted blood requests.");
+
+            // Optionally flip back to the feed automatically so they aren't stuck on the form
+            // setActiveTab("feed");
+
         } catch (err: any) {
+            console.error(err);
             alert("Error updating profile: " + err.message);
         } finally {
             setUpdatingProfile(false);
