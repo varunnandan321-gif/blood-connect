@@ -209,10 +209,11 @@ export default function DashboardPage() {
             });
 
             // 2. Targeted Notification Dispatch
-            // Find all registered donors whose blood group EXACTLY matches the requested group
+            // Find all registered donors whose blood group EXACTLY matches the requested group and who are eligible to donate
             const donorsQuery = query(
                 collection(db, "Users"),
                 where("isRegisteredDonor", "==", true),
+                where("isEligibleToDonate", "==", true),
                 where("bloodGroup", "==", requestForm.bloodGroup)
             );
 
@@ -262,6 +263,9 @@ export default function DashboardPage() {
             await setDoc(userRef, {
                 ...donorForm,
                 isRegisteredDonor: true,
+                // If they're newly registering, they are eligible by default
+                // don't overwrite it if it's already explicitly false due to a recent donation
+                isEligibleToDonate: userData?.isEligibleToDonate !== false,
                 updatedAt: serverTimestamp()
             }, { merge: true });
 
@@ -275,6 +279,33 @@ export default function DashboardPage() {
             alert("Error updating profile: " + err.message);
         } finally {
             setUpdatingProfile(false);
+        }
+    };
+
+    const handleDonateBlood = async () => {
+        if (!confirm("Have you successfully completed a blood donation today?\n\nFor health and safety reasons, donors can only give blood once every 4 months (120 days). By confirming, your profile will be temporarily deactivated from receiving emergency requests until you are eligible again.")) return;
+
+        try {
+            const { doc, updateDoc, collection, addDoc, serverTimestamp } = await import("firebase/firestore");
+
+            // 1. Mark the User as ineligible and record the donation date
+            await updateDoc(doc(db, "Users", user.uid), {
+                isEligibleToDonate: false,
+                lastDonationDate: serverTimestamp()
+            });
+
+            // 2. Log the donation event in the general logs
+            await addDoc(collection(db, "DonationLogs"), {
+                donorId: user.uid,
+                bloodGroup: userData?.bloodGroup || "unknown",
+                date: serverTimestamp()
+            });
+
+            alert("Thank you for donating blood! Your profile will remain inactive for 4 months to ensure your health and safety.");
+
+        } catch (error: any) {
+            console.error("Donation log failed:", error);
+            alert("Error logging donation: " + error.message);
         }
     };
 
@@ -829,10 +860,19 @@ export default function DashboardPage() {
                                 </div>
                             </label>
 
-                            <div className="pt-4 border-t border-slate-100 dark:border-slate-700">
+                            <div className="pt-2 border-t border-slate-100 dark:border-slate-700 space-y-3">
                                 <button type="submit" disabled={updatingProfile} className="w-full bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 dark:hover:bg-slate-600 text-white font-bold py-4 rounded-xl transition-all shadow-md flex justify-center items-center text-lg disabled:opacity-50">
                                     {updatingProfile ? <Loader2 className="animate-spin w-5 h-5" /> : "Save Profile Details"}
                                 </button>
+                                {userData?.isRegisteredDonor && userData?.isEligibleToDonate !== false && (
+                                    <button
+                                        type="button"
+                                        onClick={handleDonateBlood}
+                                        className="w-full bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 font-bold py-4 rounded-xl transition-all flex justify-center items-center text-lg border-2 border-red-200 dark:border-red-900/50"
+                                    >
+                                        🩸 I Have Donated Blood Today
+                                    </button>
+                                )}
                             </div>
                         </form>
                     </motion.div>
