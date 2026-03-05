@@ -302,12 +302,50 @@ export default function DashboardPage() {
     };
 
     const handleDeleteRequest = async (requestId: string) => {
-        if (!confirm("Force delete this request?")) return;
+        if (!confirm("Are you sure you want to delete this request? Doing so will remove it permanently and clear any related notifications.")) return;
         try {
-            const { doc, deleteDoc } = await import("firebase/firestore");
+            const req = requests.find(r => r.id === requestId);
+            const { doc, deleteDoc, collection, query, where, getDocs, writeBatch, serverTimestamp, addDoc } = await import("firebase/firestore");
+
+            // Log the deletion
+            await addDoc(collection(db, "DeletionLogs"), {
+                requestId,
+                requesterId: user.uid,
+                reason: isAdmin && user.uid !== req?.requesterId ? "admin_deletion" : "manual_deletion",
+                bloodGroup: req?.bloodGroup || "unknown",
+                deletedAt: serverTimestamp()
+            });
+
+            // Delete notifications for this request in batch across all matching donors
+            if (req && req.bloodGroup) {
+                const donorsQuery = query(
+                    collection(db, "Users"),
+                    where("isRegisteredDonor", "==", true),
+                    where("bloodGroup", "==", req.bloodGroup)
+                );
+                const donorsSnapshot = await getDocs(donorsQuery);
+
+                if (!donorsSnapshot.empty) {
+                    const batch = writeBatch(db);
+                    donorsSnapshot.forEach((donorDoc) => {
+                        if (donorDoc.id !== req.requesterId) {
+                            // Since we created Notifications with the RequestID as the doc ID!
+                            const notificationRef = doc(db, `Users/${donorDoc.id}/Notifications`, requestId);
+                            batch.delete(notificationRef);
+                        }
+                    });
+                    await batch.commit();
+                }
+            }
+
+            // Delete the request itself
             await deleteDoc(doc(db, "Requests", requestId));
-            alert("Request permanently deleted.");
-        } catch (e: any) { alert(e.message); }
+
+            alert("Request permanently deleted and notifications cleared.");
+        } catch (e: any) {
+            console.error("Delete failed:", e);
+            alert(e.message);
+        }
     };
 
     const markNotificationAsRead = async (notificationId: string) => {
@@ -910,16 +948,26 @@ export default function DashboardPage() {
                                                 </button>
                                             )}
 
-                                            {user?.uid === req.requesterId && req.status === "active" && (
-                                                <button
-                                                    onClick={() => handleCloseRequest(req.id)}
-                                                    className="bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm"
-                                                >
-                                                    Mark as Fulfilled
-                                                </button>
+                                            {user?.uid === req.requesterId && (
+                                                <>
+                                                    {req.status === "active" && (
+                                                        <button
+                                                            onClick={() => handleCloseRequest(req.id)}
+                                                            className="bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm"
+                                                        >
+                                                            Mark as Fulfilled
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        onClick={() => handleDeleteRequest(req.id)}
+                                                        className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/10 dark:hover:bg-red-900/30 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm"
+                                                    >
+                                                        Delete Request
+                                                    </button>
+                                                </>
                                             )}
 
-                                            {isAdmin && (
+                                            {isAdmin && user?.uid !== req.requesterId && (
                                                 <button
                                                     onClick={() => handleDeleteRequest(req.id)}
                                                     className="bg-red-100 text-red-600 hover:bg-red-600 hover:text-white dark:bg-red-900/30 dark:hover:bg-red-600 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm"
@@ -1088,31 +1136,33 @@ export default function DashboardPage() {
                     </motion.div>
                 )}
 
-            </AnimatePresence>
+            </AnimatePresence >
 
             {/* Notification Toast */}
             <AnimatePresence>
-                {toastMessage && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="fixed bottom-6 right-6 bg-white dark:bg-slate-800 shadow-2xl border-l-4 border-red-500 rounded-xl p-5 max-w-sm z-50 flex items-start space-x-4 cursor-pointer"
-                        onClick={() => {
-                            setToastMessage(null);
-                            setActiveTab("matches");
-                        }}
-                    >
-                        <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-full">
-                            <Bell className="w-6 h-6 text-red-600 dark:text-red-400 animate-pulse" />
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-slate-800 dark:text-white">{toastMessage.title}</h4>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug">{toastMessage.desc}</p>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                {
+                    toastMessage && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="fixed bottom-6 right-6 bg-white dark:bg-slate-800 shadow-2xl border-l-4 border-red-500 rounded-xl p-5 max-w-sm z-50 flex items-start space-x-4 cursor-pointer"
+                            onClick={() => {
+                                setToastMessage(null);
+                                setActiveTab("matches");
+                            }}
+                        >
+                            <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-full">
+                                <Bell className="w-6 h-6 text-red-600 dark:text-red-400 animate-pulse" />
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-slate-800 dark:text-white">{toastMessage.title}</h4>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug">{toastMessage.desc}</p>
+                            </div>
+                        </motion.div>
+                    )
+                }
+            </AnimatePresence >
         </>
     );
 }
