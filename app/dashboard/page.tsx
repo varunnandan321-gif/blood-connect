@@ -520,7 +520,7 @@ export default function DashboardPage() {
                     <h1 className="text-3xl font-bold tracking-tight mb-2">
                         Blood Connect Dashboard
                     </h1>
-                    <p className="text-slate-500 dark:text-slate-400 max-w-xl">
+                    <p className="text-slate-500  max-w-xl">
                         View immediate blood requirements in your area, or raise a hand if you have an emergency.
                     </p>
                 </div>
@@ -534,30 +534,30 @@ export default function DashboardPage() {
             </header>
 
             {/* Tabs */}
-            <div className="flex space-x-1 bg-slate-200/50 dark:bg-slate-800/50 p-1 rounded-xl mb-6 w-full md:w-max">
+            <div className="flex space-x-1 bg-slate-200/50  p-1 rounded-xl mb-6 w-full md:w-max">
                 <button
                     onClick={() => setActiveTab("feed")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'feed' ? 'bg-white dark:bg-slate-700 shadow-sm text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
+                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'feed' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
                 >
                     Active Emergencies
                 </button>
 
                 <button
                     onClick={() => setActiveTab("my-requests")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'my-requests' ? 'bg-white dark:bg-slate-700 shadow-sm text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
+                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'my-requests' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
                 >
                     My Requests
                 </button>
 
                 <button
                     onClick={() => setActiveTab("matches")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'matches' ? 'bg-white dark:bg-slate-700 shadow-sm text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
+                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'matches' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
                 >
                     My Matches
                 </button>
                 <button
                     onClick={() => setActiveTab("messages")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none relative ${activeTab === 'messages' ? 'bg-white dark:bg-slate-700 shadow-sm text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
+                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none relative ${activeTab === 'messages' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
                 >
                     Messages
                     {chats.length > 0 && (
@@ -566,7 +566,7 @@ export default function DashboardPage() {
                 </button>
                 <button
                     onClick={() => setActiveTab("notifications")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none relative ${activeTab === 'notifications' ? 'bg-white dark:bg-slate-700 shadow-sm text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
+                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none relative ${activeTab === 'notifications' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
                 >
                     Alerts
                     {notifications.filter(n => !n.read).length > 0 && (
@@ -575,20 +575,20 @@ export default function DashboardPage() {
                 </button>
                 <button
                     onClick={() => setActiveTab("facilities")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'facilities' ? 'bg-white dark:bg-slate-700 shadow-sm text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
+                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'facilities' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
                 >
                     Hospitals & Banks
                 </button>
                 <button
                     onClick={() => setActiveTab("profile")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'profile' ? 'bg-white dark:bg-slate-700 shadow-sm text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
+                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'profile' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
                 >
                     Donor Profile
                 </button>
                 {isAdmin && (
                     <button
                         onClick={() => setActiveTab("admin")}
-                        className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'admin' ? 'bg-slate-900 shadow-sm text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
+                        className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'admin' ? 'bg-rose-50 shadow-sm text-slate-800' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
                     >
                         Admin Panel
                     </button>
@@ -601,14 +601,14 @@ export default function DashboardPage() {
                 {activeTab === "create" && (
                     <motion.div
                         initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.98 }}
-                        className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-red-100 dark:border-slate-700/50 relative overflow-hidden max-w-2xl"
+                        className="bg-white  p-8 rounded-3xl shadow-xl border border-red-100  relative overflow-hidden max-w-2xl"
                     >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-red-100 dark:bg-red-900/20 rounded-bl-full pointer-events-none"></div>
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-red-100  rounded-bl-full pointer-events-none"></div>
 
-                        <h2 className="text-2xl font-bold mb-6 flex items-center text-red-600 dark:text-red-500">
+                        <h2 className="text-2xl font-bold mb-6 flex items-center text-red-600 ">
                             <Hand className="mr-2 w-6 h-6" /> Raise Hand for Blood
                         </h2>
-                        <p className="text-slate-500 mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">
+                        <p className="text-slate-500 mb-6 border-b border-slate-100  pb-4">
                             Raise a hand to notify all registered donors that you have an emergency need for a specific blood group.
                         </p>
 
@@ -616,11 +616,11 @@ export default function DashboardPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
                                     <label className="block text-sm font-semibold mb-1">Patient Name</label>
-                                    <input type="text" required value={requestForm.patientName} onChange={e => setRequestForm({ ...requestForm, patientName: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="Enter patient name" />
+                                    <input type="text" required value={requestForm.patientName} onChange={e => setRequestForm({ ...requestForm, patientName: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-slate-300  bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="Enter patient name" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold mb-1">Blood Group Required</label>
-                                    <select required value={requestForm.bloodGroup} onChange={e => setRequestForm({ ...requestForm, bloodGroup: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-red-500 outline-none">
+                                    <select required value={requestForm.bloodGroup} onChange={e => setRequestForm({ ...requestForm, bloodGroup: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-slate-300  bg-transparent focus:ring-2 focus:ring-red-500 outline-none">
                                         {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(bg => <option key={bg} value={bg}>{bg}</option>)}
                                     </select>
                                 </div>
@@ -629,11 +629,11 @@ export default function DashboardPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
                                     <label className="block text-sm font-semibold mb-1">Units Needed (Pints)</label>
-                                    <input type="number" min="1" required value={requestForm.unitsRequired} onChange={e => setRequestForm({ ...requestForm, unitsRequired: parseInt(e.target.value) || 1 })} className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="e.g. 2" />
+                                    <input type="number" min="1" required value={requestForm.unitsRequired} onChange={e => setRequestForm({ ...requestForm, unitsRequired: parseInt(e.target.value) || 1 })} className="w-full px-4 py-3 rounded-xl border border-slate-300  bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="e.g. 2" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold mb-1">Required By (Date/Time)</label>
-                                    <input type="datetime-local" required value={requestForm.requiredBy} onChange={e => setRequestForm({ ...requestForm, requiredBy: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-red-500 outline-none" />
+                                    <input type="datetime-local" required value={requestForm.requiredBy} onChange={e => setRequestForm({ ...requestForm, requiredBy: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-slate-300  bg-transparent focus:ring-2 focus:ring-red-500 outline-none" />
                                 </div>
                             </div>
 
@@ -641,7 +641,7 @@ export default function DashboardPage() {
                                 <label className="block text-sm font-semibold mb-1">Hospital / Location</label>
                                 <div className="relative">
                                     <MapPin className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" />
-                                    <input type="text" required value={requestForm.location} onChange={e => setRequestForm({ ...requestForm, location: e.target.value })} className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="E.g. City Hospital, Downtown" />
+                                    <input type="text" required value={requestForm.location} onChange={e => setRequestForm({ ...requestForm, location: e.target.value })} className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300  bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="E.g. City Hospital, Downtown" />
                                 </div>
                             </div>
 
@@ -649,11 +649,11 @@ export default function DashboardPage() {
                                 <label className="block text-sm font-semibold mb-1">Contact Phone</label>
                                 <div className="relative">
                                     <Phone className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" />
-                                    <input type="tel" required value={requestForm.contact} onChange={e => setRequestForm({ ...requestForm, contact: e.target.value })} className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="+1 (555) 000-0000" />
+                                    <input type="tel" required value={requestForm.contact} onChange={e => setRequestForm({ ...requestForm, contact: e.target.value })} className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300  bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="+1 (555) 000-0000" />
                                 </div>
                             </div>
 
-                            <div className="pt-4 border-t border-slate-100 dark:border-slate-700">
+                            <div className="pt-4 border-t border-slate-100 ">
                                 <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg flex justify-center items-center text-lg">
                                     <Hand className="w-5 h-5 mr-2" /> Raise Hand Now
                                 </button>
@@ -664,10 +664,10 @@ export default function DashboardPage() {
 
                 {/* Messages Pane */}
                 {activeTab === "messages" && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-[75vh] flex bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-xl border border-slate-200 dark:border-slate-700">
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-[75vh] flex bg-white  rounded-3xl overflow-hidden shadow-xl border border-slate-200 ">
                         {/* Chat List (Sidebar) */}
-                        <div className={`w-full md:w-1/3 border-r border-slate-100 dark:border-slate-700 flex flex-col ${activeChat ? 'hidden md:flex' : 'flex'}`}>
-                            <div className="p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80">
+                        <div className={`w-full md:w-1/3 border-r border-slate-100  flex flex-col ${activeChat ? 'hidden md:flex' : 'flex'}`}>
+                            <div className="p-5 border-b border-slate-100  bg-slate-50 ">
                                 <h3 className="font-bold text-lg flex items-center"><MessageCircle className="w-5 h-5 mr-2 text-red-500" /> Active Chats</h3>
                             </div>
                             <div className="flex-1 overflow-y-auto">
@@ -681,11 +681,11 @@ export default function DashboardPage() {
                                             <div
                                                 key={chat.id}
                                                 onClick={() => setActiveChat(chat)}
-                                                className={`p-4 border-b border-slate-50 dark:border-slate-700/50 cursor-pointer transition-colors ${activeChat?.id === chat.id ? 'bg-red-50 dark:bg-red-900/20 border-l-4 border-l-red-500' : 'hover:bg-slate-50 dark:hover:bg-slate-700/30'}`}
+                                                className={`p-4 border-b border-slate-50  cursor-pointer transition-colors ${activeChat?.id === chat.id ? 'bg-red-50  border-l-4 border-l-red-500' : 'hover:bg-slate-50 :bg-slate-700/30'}`}
                                             >
                                                 <div className="flex justify-between items-start mb-1">
-                                                    <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm truncate">{otherUserName}</h4>
-                                                    <span className="text-xs text-red-600 dark:text-red-400 font-bold bg-red-100 dark:bg-red-900/30 px-2 py-0.5 rounded-md">{chat.requestDetails?.bloodGroup}</span>
+                                                    <h4 className="font-bold text-slate-800  text-sm truncate">{otherUserName}</h4>
+                                                    <span className="text-xs text-red-600  font-bold bg-red-100  px-2 py-0.5 rounded-md">{chat.requestDetails?.bloodGroup}</span>
                                                 </div>
                                                 <p className="text-xs text-slate-500 truncate">{chat.lastMessage}</p>
                                             </div>
@@ -696,7 +696,7 @@ export default function DashboardPage() {
                         </div>
 
                         {/* Active Chat Area */}
-                        <div className={`flex-1 flex flex-col bg-slate-50/50 dark:bg-slate-900/20 ${!activeChat ? 'hidden md:flex items-center justify-center' : 'flex'}`}>
+                        <div className={`flex-1 flex flex-col bg-slate-50/50  ${!activeChat ? 'hidden md:flex items-center justify-center' : 'flex'}`}>
                             {!activeChat ? (
                                 <div className="text-center text-slate-400">
                                     <MessageCircle className="w-16 h-16 mx-auto mb-4 opacity-20" />
@@ -705,16 +705,16 @@ export default function DashboardPage() {
                             ) : (
                                 <>
                                     {/* Chat Header */}
-                                    <div className="p-4 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between shadow-sm z-10 w-full">
+                                    <div className="p-4 bg-white  border-b border-slate-100  flex items-center justify-between shadow-sm z-10 w-full">
                                         <div className="flex items-center w-full">
-                                            <button onClick={() => setActiveChat(null)} className="md:hidden mr-3 text-slate-400 hover:text-slate-600 font-bold px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-lg">
+                                            <button onClick={() => setActiveChat(null)} className="md:hidden mr-3 text-slate-400 hover:text-slate-600 font-bold px-3 py-1 bg-slate-100  rounded-lg">
                                                 ← Back
                                             </button>
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="font-bold text-slate-800 dark:text-slate-100 truncate flex items-center">
+                                                <h3 className="font-bold text-slate-800  truncate flex items-center">
                                                     {activeChat.users?.[activeChat.participants?.find((id: string) => id !== user.uid)] || "User"}
                                                     {activeChat.donorId && activeChat.donorId !== user.uid && activeChat.donorBloodGroup && (
-                                                        <span className="ml-2 text-[10px] bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-0.5 rounded-full font-bold border border-red-200 dark:border-red-800 uppercase tracking-wider">
+                                                        <span className="ml-2 text-[10px] bg-red-100  text-red-600  px-2 py-0.5 rounded-full font-bold border border-red-200  uppercase tracking-wider">
                                                             Donor: {activeChat.donorBloodGroup}
                                                         </span>
                                                     )}
@@ -733,7 +733,7 @@ export default function DashboardPage() {
                                             const isMe = msg.senderId === user.uid;
                                             return (
                                                 <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                                                    <div className={`max-w-[85%] md:max-w-[75%] rounded-2xl px-5 py-3 ${isMe ? 'bg-red-600 text-white rounded-br-none shadow-md shadow-red-600/20' : 'bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 rounded-bl-none shadow-sm border border-slate-100 dark:border-slate-600'}`}>
+                                                    <div className={`max-w-[85%] md:max-w-[75%] rounded-2xl px-5 py-3 ${isMe ? 'bg-red-600 hover:bg-red-700 text-white rounded-br-none shadow-md shadow-red-600/20' : 'bg-white  text-slate-800  rounded-bl-none shadow-sm border border-slate-100 '}`}>
                                                         <p className="text-sm break-words">{msg.text}</p>
                                                     </div>
                                                 </div>
@@ -742,14 +742,14 @@ export default function DashboardPage() {
                                     </div>
 
                                     {/* Input Area */}
-                                    <div className="p-4 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 w-full">
+                                    <div className="p-4 bg-white  border-t border-slate-100  w-full">
                                         <form onSubmit={sendMessage} className="flex space-x-2 w-full">
                                             <input
                                                 type="text"
                                                 value={newMessage}
                                                 onChange={e => setNewMessage(e.target.value)}
                                                 placeholder="Type a message (e.g., 'I can be there in 20 mins')..."
-                                                className="flex-1 min-w-0 bg-slate-100 dark:bg-slate-700 border-none rounded-full px-5 py-3 text-sm focus:ring-2 focus:ring-red-500 outline-none"
+                                                className="flex-1 min-w-0 bg-slate-100  border-none rounded-full px-5 py-3 text-sm focus:ring-2 focus:ring-red-500 outline-none"
                                             />
                                             <button type="submit" disabled={!newMessage.trim()} className="shrink-0 bg-red-600 hover:bg-red-700 text-white rounded-full w-12 h-12 flex items-center justify-center transition-transform active:scale-95 disabled:opacity-50">
                                                 <Send className="w-5 h-5 ml-1" />
@@ -766,12 +766,12 @@ export default function DashboardPage() {
                 {activeTab === "notifications" && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
-                        className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 relative max-w-2xl"
+                        className="bg-white  p-8 rounded-3xl shadow-xl border border-slate-200  relative max-w-2xl"
                     >
-                        <h2 className="text-2xl font-bold mb-2 flex items-center text-slate-800 dark:text-white">
+                        <h2 className="text-2xl font-bold mb-2 flex items-center text-slate-800 ">
                             <Bell className="mr-2 w-6 h-6 text-red-500" /> Emergency Alerts
                         </h2>
-                        <p className="text-slate-500 mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">
+                        <p className="text-slate-500 mb-6 border-b border-slate-100  pb-4">
                             These are urgent requests from patients exactly matching your registered blood group.
                         </p>
 
@@ -786,31 +786,31 @@ export default function DashboardPage() {
                                         key={notif.id}
                                         initial={{ opacity: 0, y: 5 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        className={`p-5 rounded-2xl border ${!notif.read ? 'bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-800/30' : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700'}`}
+                                        className={`p-5 rounded-2xl border ${!notif.read ? 'bg-red-50  border-red-200 ' : 'bg-slate-50  border-slate-200 '}`}
                                         onClick={() => !notif.read && markNotificationAsRead(notif.id)}
                                     >
                                         <div className="flex justify-between items-start mb-2">
                                             <div className="flex items-center gap-2">
                                                 {!notif.read && <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>}
-                                                <h4 className={`font-bold ${!notif.read ? 'text-red-700 dark:text-red-400' : 'text-slate-700 dark:text-slate-300'}`}>
+                                                <h4 className={`font-bold ${!notif.read ? 'text-red-700 ' : 'text-slate-700 '}`}>
                                                     Targeted Request for {notif.bloodGroup}
                                                 </h4>
                                             </div>
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); deleteNotification(notif.id); }}
-                                                className="text-xs text-slate-400 hover:text-red-600 font-medium px-2 py-1 rounded bg-white dark:bg-slate-900 shadow-sm"
+                                                className="text-xs text-slate-400 hover:text-red-600 font-medium px-2 py-1 rounded bg-white  shadow-sm"
                                             >
                                                 Dismiss
                                             </button>
                                         </div>
-                                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                                        <p className="text-sm text-slate-600  mb-3">
                                             {notif.message}
                                         </p>
 
                                         <div className="flex gap-2">
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); setActiveTab("feed"); }}
-                                                className="text-xs font-bold bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm hover:border-slate-300 dark:hover:border-slate-500 transition-colors"
+                                                className="text-xs font-bold bg-white  text-slate-800  px-3 py-1.5 rounded-lg border border-slate-200  shadow-sm hover:border-slate-300 :border-slate-500 transition-colors"
                                             >
                                                 View all on Feed
                                             </button>
@@ -826,12 +826,12 @@ export default function DashboardPage() {
                 {activeTab === "profile" && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
-                        className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 relative overflow-hidden max-w-2xl"
+                        className="bg-white  p-8 rounded-3xl shadow-xl border border-slate-200  relative overflow-hidden max-w-2xl"
                     >
-                        <h2 className="text-2xl font-bold mb-2 flex items-center text-slate-800 dark:text-white">
+                        <h2 className="text-2xl font-bold mb-2 flex items-center text-slate-800 ">
                             <UserCircle className="mr-2 w-6 h-6 text-red-500" /> Donor Registration Profile
                         </h2>
-                        <p className="text-slate-500 mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">
+                        <p className="text-slate-500 mb-6 border-b border-slate-100  pb-4">
                             Update your blood type and availability to help us match you quickly during critical emergencies.
                         </p>
 
@@ -839,7 +839,7 @@ export default function DashboardPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
                                     <label className="block text-sm font-semibold mb-1">Your Blood Group (Crucial)</label>
-                                    <select required value={donorForm.bloodGroup} onChange={e => setDonorForm({ ...donorForm, bloodGroup: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-red-500 outline-none font-bold text-red-600">
+                                    <select required value={donorForm.bloodGroup} onChange={e => setDonorForm({ ...donorForm, bloodGroup: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-slate-300  bg-transparent focus:ring-2 focus:ring-red-500 outline-none font-bold text-red-600">
                                         <option value="">Select Group...</option>
                                         {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(bg => <option key={bg} value={bg}>{bg}</option>)}
                                     </select>
@@ -848,7 +848,7 @@ export default function DashboardPage() {
                                     <label className="block text-sm font-semibold mb-1">City / Region</label>
                                     <div className="relative">
                                         <MapPin className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" />
-                                        <input type="text" required value={donorForm.location} onChange={e => setDonorForm({ ...donorForm, location: e.target.value })} className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="Your City" />
+                                        <input type="text" required value={donorForm.location} onChange={e => setDonorForm({ ...donorForm, location: e.target.value })} className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300  bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="Your City" />
                                     </div>
                                 </div>
                             </div>
@@ -857,16 +857,16 @@ export default function DashboardPage() {
                                 <label className="block text-sm font-semibold mb-1">Contact Phone</label>
                                 <div className="relative">
                                     <Phone className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" />
-                                    <input type="tel" required value={donorForm.contact} onChange={e => setDonorForm({ ...donorForm, contact: e.target.value })} className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="+1 (555) 000-0000" />
+                                    <input type="tel" required value={donorForm.contact} onChange={e => setDonorForm({ ...donorForm, contact: e.target.value })} className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300  bg-transparent focus:ring-2 focus:ring-red-500 outline-none" placeholder="+1 (555) 000-0000" />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold mb-1 text-slate-700 dark:text-slate-300">
+                                <label className="block text-sm font-semibold mb-1 text-slate-700 ">
                                     Medical Conditions (Optional)
                                 </label>
                                 <textarea
-                                    className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-red-500 transition-all outline-none resize-none"
+                                    className="w-full px-4 py-3 rounded-xl border border-slate-300  bg-transparent focus:ring-2 focus:ring-red-500 transition-all outline-none resize-none"
                                     rows={2}
                                     placeholder="List any ongoing medications, recent surgeries, or conditions..."
                                     value={donorForm.medicalConditions}
@@ -875,7 +875,7 @@ export default function DashboardPage() {
                                 <p className="text-xs text-slate-500 mt-1">This information helps recipients know if your blood is safe for specific immediate uses.</p>
                             </div>
 
-                            <label className="flex items-center space-x-3 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700 mt-2 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <label className="flex items-center space-x-3 p-4 bg-slate-50  rounded-xl border border-slate-200  mt-2 cursor-pointer hover:bg-slate-100 :bg-white transition-colors">
                                 <input
                                     type="checkbox"
                                     checked={donorForm.available}
@@ -883,20 +883,20 @@ export default function DashboardPage() {
                                     className="w-5 h-5 rounded border-slate-300 text-red-600 focus:ring-red-500"
                                 />
                                 <div>
-                                    <div className="font-bold text-slate-800 dark:text-slate-200">Available to Donate Right Now</div>
+                                    <div className="font-bold text-slate-800 ">Available to Donate Right Now</div>
                                     <div className="text-sm text-slate-500">Uncheck this if you are temporarily unavailable or recently donated.</div>
                                 </div>
                             </label>
 
-                            <div className="pt-2 border-t border-slate-100 dark:border-slate-700 space-y-3">
-                                <button type="submit" disabled={updatingProfile} className="w-full bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 dark:hover:bg-slate-600 text-white font-bold py-4 rounded-xl transition-all shadow-md flex justify-center items-center text-lg disabled:opacity-50">
+                            <div className="pt-2 border-t border-slate-100  space-y-3">
+                                <button type="submit" disabled={updatingProfile} className="w-full bg-rose-50  hover:bg-white :bg-slate-600 text-slate-800 font-bold py-4 rounded-xl transition-all shadow-md flex justify-center items-center text-lg disabled:opacity-50">
                                     {updatingProfile ? <Loader2 className="animate-spin w-5 h-5" /> : "Save Profile Details"}
                                 </button>
                                 {userData?.isRegisteredDonor && userData?.isEligibleToDonate !== false && (
                                     <button
                                         type="button"
                                         onClick={handleDonateBlood}
-                                        className="w-full bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 font-bold py-4 rounded-xl transition-all flex justify-center items-center text-lg border-2 border-red-200 dark:border-red-900/50"
+                                        className="w-full bg-red-50  hover:bg-red-100 :bg-red-900/30 text-red-600 font-bold py-4 rounded-xl transition-all flex justify-center items-center text-lg border-2 border-red-200 "
                                     >
                                         🩸 I Have Donated Blood Today
                                     </button>
@@ -916,7 +916,7 @@ export default function DashboardPage() {
                                 <input
                                     type="text"
                                     placeholder="Search by location or hospital..."
-                                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-red-500 outline-none shadow-sm"
+                                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200  bg-white  focus:ring-2 focus:ring-red-500 outline-none shadow-sm"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
@@ -927,8 +927,8 @@ export default function DashboardPage() {
                                         key={bg}
                                         onClick={() => setFilterGroup(bg)}
                                         className={`px-4 py-2.5 rounded-xl font-bold text-sm shrink-0 border-2 transition-all ${filterGroup === bg
-                                            ? "border-red-500 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400"
-                                            : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-800"
+                                            ? "border-red-500 bg-red-50  text-red-600 "
+                                            : "border-slate-200  text-slate-600  bg-white "
                                             }`}
                                     >
                                         {bg}
@@ -941,9 +941,9 @@ export default function DashboardPage() {
                         {loadingReqs ? (
                             <div className="py-20 flex justify-center text-slate-400"><Loader2 className="animate-spin w-8 h-8" /></div>
                         ) : filteredRequests.length === 0 ? (
-                            <div className="bg-slate-100 dark:bg-slate-800/50 rounded-3xl p-12 text-center border border-dashed border-slate-300 dark:border-slate-700">
-                                <Search className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-                                <h3 className="text-xl font-bold text-slate-700 dark:text-slate-300 mb-2">No Requests Found</h3>
+                            <div className="bg-slate-100  rounded-3xl p-12 text-center border border-dashed border-slate-300 ">
+                                <Search className="w-12 h-12 text-slate-300  mx-auto mb-4" />
+                                <h3 className="text-xl font-bold text-slate-700  mb-2">No Requests Found</h3>
                                 <p className="text-slate-500">
                                     {activeTab === 'matches' && !userData?.bloodGroup
                                         ? "You need to update your Donor Profile with your Blood Group before we can show your matches!"
@@ -956,11 +956,11 @@ export default function DashboardPage() {
                                     <motion.div
                                         key={req.id}
                                         layoutId={req.id}
-                                        className="bg-white dark:bg-slate-800 rounded-2xl p-6 border-l-4 border-l-red-500 shadow-md hover:shadow-xl transition-all group"
+                                        className="bg-white  rounded-2xl p-6 border-l-4 border-l-red-500 shadow-md hover:shadow-xl transition-all group"
                                     >
                                         <div className="flex justify-between items-start mb-4">
                                             <div className="flex items-center space-x-4">
-                                                <div className="w-14 h-14 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-black text-xl flex items-center justify-center border-2 border-red-200 dark:border-red-800">
+                                                <div className="w-14 h-14 rounded-full bg-red-100  text-red-600  font-black text-xl flex items-center justify-center border-2 border-red-200 ">
                                                     {req.bloodGroup}
                                                 </div>
                                                 <div>
@@ -970,18 +970,18 @@ export default function DashboardPage() {
                                                             <Hand className="w-3 h-3 mr-1" /> Hand Raised
                                                         </span>
                                                     </div>
-                                                    <div className="flex items-center text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                                                    <div className="flex items-center text-sm text-slate-500  mt-0.5">
                                                         <MapPin className="w-3.5 h-3.5 mr-1" />
                                                         {req.location}
                                                     </div>
                                                     <div className="flex items-center space-x-3 mt-1 text-sm font-medium">
                                                         {req.unitsRequired && (
-                                                            <span className="text-red-600 dark:text-red-400">
+                                                            <span className="text-red-600 ">
                                                                 {req.unitsRequired} Unit{req.unitsRequired > 1 ? 's' : ''} Needed
                                                             </span>
                                                         )}
                                                         {req.requiredBy && (
-                                                            <span className="text-orange-600 dark:text-orange-400 flex items-center">
+                                                            <span className="text-orange-600  flex items-center">
                                                                 <Clock className="w-3 h-3 mr-1" />
                                                                 By {new Date(req.requiredBy).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
                                                             </span>
@@ -991,17 +991,17 @@ export default function DashboardPage() {
                                             </div>
 
                                             {req.status === "active" ? (
-                                                <div className="text-xs font-medium text-slate-400 bg-slate-100 dark:bg-slate-900 px-3 py-1 rounded-full flex items-center">
+                                                <div className="text-xs font-medium text-slate-400 bg-slate-100  px-3 py-1 rounded-full flex items-center">
                                                     <Clock className="w-3.5 h-3.5 mr-1" /> Active
                                                 </div>
                                             ) : (
-                                                <div className="text-xs font-medium text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 rounded-full flex items-center font-bold">
+                                                <div className="text-xs font-medium text-emerald-600 bg-emerald-100  px-3 py-1 rounded-full flex items-center font-bold">
                                                     <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Fulfilled
                                                 </div>
                                             )}
                                         </div>
 
-                                        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                                        <div className="mt-4 pt-4 border-t border-slate-100  flex justify-between items-center">
                                             <div className="text-sm font-semibold flex items-center">
                                                 <Phone className="w-4 h-4 text-slate-400 mr-2" />
                                                 {req.contact}
@@ -1010,7 +1010,7 @@ export default function DashboardPage() {
                                             {user?.uid !== req.requesterId && req.status === "active" && (
                                                 <button
                                                     onClick={() => initiateChat(req)}
-                                                    className="bg-red-50 text-red-600 hover:bg-red-600 hover:text-white dark:bg-red-900/20 dark:hover:bg-red-600 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm flex items-center"
+                                                    className="bg-red-50 text-red-600 hover:bg-red-600 hover:text-slate-800  :bg-red-600 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm flex items-center"
                                                 >
                                                     <MessageCircle className="w-4 h-4 inline-block mr-2" /> I can donate
                                                 </button>
@@ -1021,14 +1021,14 @@ export default function DashboardPage() {
                                                     {req.status === "active" && (
                                                         <button
                                                             onClick={() => handleCloseRequest(req.id)}
-                                                            className="bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm"
+                                                            className="bg-slate-100 text-slate-600 hover:bg-slate-200  :bg-slate-700 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm"
                                                         >
                                                             Mark as Fulfilled
                                                         </button>
                                                     )}
                                                     <button
                                                         onClick={() => handleDeleteRequest(req.id)}
-                                                        className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/10 dark:hover:bg-red-900/30 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm"
+                                                        className="bg-red-50 text-red-600 hover:bg-red-100  :bg-red-900/30 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm"
                                                     >
                                                         Delete Request
                                                     </button>
@@ -1038,7 +1038,7 @@ export default function DashboardPage() {
                                             {isAdmin && user?.uid !== req.requesterId && (
                                                 <button
                                                     onClick={() => handleDeleteRequest(req.id)}
-                                                    className="bg-red-100 text-red-600 hover:bg-red-600 hover:text-white dark:bg-red-900/30 dark:hover:bg-red-600 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm"
+                                                    className="bg-red-100 text-red-600 hover:bg-red-600 hover:text-slate-800  :bg-red-600 font-bold px-5 py-2 rounded-lg transition-colors shadow-sm text-sm"
                                                 >
                                                     Force Delete
                                                 </button>
@@ -1054,14 +1054,14 @@ export default function DashboardPage() {
                 {/* Admin Pane */}
                 {activeTab === "admin" && isAdmin && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                        <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 relative mb-8">
-                            <h2 className="text-2xl font-bold mb-6 flex items-center text-slate-800 dark:text-white">
+                        <div className="bg-white  p-8 rounded-3xl shadow-xl border border-slate-200  relative mb-8">
+                            <h2 className="text-2xl font-bold mb-6 flex items-center text-slate-800 ">
                                 <UserCircle className="mr-2 w-6 h-6 text-slate-500" /> Platform Users
                             </h2>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left border-collapse">
                                     <thead>
-                                        <tr className="border-b border-slate-200 dark:border-slate-700 text-sm">
+                                        <tr className="border-b border-slate-200  text-sm">
                                             <th className="pb-3 text-slate-500 font-semibold">User ID</th>
                                             <th className="pb-3 text-slate-500 font-semibold px-4">Name</th>
                                             <th className="pb-3 text-slate-500 font-semibold px-4">Group</th>
@@ -1071,13 +1071,13 @@ export default function DashboardPage() {
                                     </thead>
                                     <tbody>
                                         {allUsers.map((u: any) => (
-                                            <tr key={u.id} className="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                            <tr key={u.id} className="border-b border-slate-100  hover:bg-slate-50 :bg-white/50 transition-colors">
                                                 <td className="py-4 text-xs font-mono text-slate-400">{u.id}</td>
                                                 <td className="py-4 font-semibold text-sm px-4">{u.name || "N/A"}</td>
                                                 <td className="py-4 px-4 text-red-500 font-bold text-sm">{u.bloodGroup || "N/A"}</td>
-                                                <td className="py-4 px-4 text-sm text-slate-600 dark:text-slate-400">{u.location || "N/A"}</td>
+                                                <td className="py-4 px-4 text-sm text-slate-600 ">{u.location || "N/A"}</td>
                                                 <td className="py-4 text-right">
-                                                    <button onClick={() => deleteUserProfile(u.id)} className="text-xs bg-red-100 text-red-600 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-lg font-bold transition-colors">
+                                                    <button onClick={() => deleteUserProfile(u.id)} className="text-xs bg-red-100 text-red-600 hover:bg-red-600 hover:text-slate-800 px-3 py-1.5 rounded-lg font-bold transition-colors">
                                                         Delete Profile
                                                     </button>
                                                 </td>
@@ -1105,7 +1105,7 @@ export default function DashboardPage() {
                                 <input
                                     type="text"
                                     placeholder="Search by location or facility name..."
-                                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-red-500 outline-none shadow-sm"
+                                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200  bg-white  focus:ring-2 focus:ring-red-500 outline-none shadow-sm"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
@@ -1116,8 +1116,8 @@ export default function DashboardPage() {
                                         key={bg}
                                         onClick={() => setFilterGroup(bg)}
                                         className={`px-4 py-2.5 rounded-xl font-bold text-sm shrink-0 border-2 transition-all ${filterGroup === bg
-                                            ? "border-red-500 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400"
-                                            : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-800"
+                                            ? "border-red-500 bg-red-50  text-red-600 "
+                                            : "border-slate-200  text-slate-600  bg-white "
                                             }`}
                                     >
                                         {bg}
@@ -1130,9 +1130,9 @@ export default function DashboardPage() {
                         {loadingFacilities ? (
                             <div className="py-20 flex justify-center text-slate-400"><Loader2 className="animate-spin w-8 h-8" /></div>
                         ) : filteredFacilities.length === 0 ? (
-                            <div className="bg-slate-100 dark:bg-slate-800/50 rounded-3xl p-12 text-center border border-dashed border-slate-300 dark:border-slate-700">
-                                <Building2 className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-                                <h3 className="text-xl font-bold text-slate-700 dark:text-slate-300 mb-2">No Facilities Found</h3>
+                            <div className="bg-slate-100  rounded-3xl p-12 text-center border border-dashed border-slate-300 ">
+                                <Building2 className="w-12 h-12 text-slate-300  mx-auto mb-4" />
+                                <h3 className="text-xl font-bold text-slate-700  mb-2">No Facilities Found</h3>
                                 <p className="text-slate-500">
                                     {filterGroup !== "All"
                                         ? `No nearby blood banks currently have '${filterGroup}' in stock.`
@@ -1145,11 +1145,11 @@ export default function DashboardPage() {
                                     <motion.div
                                         key={fac.id}
                                         layoutId={fac.id}
-                                        className="bg-white dark:bg-slate-800 rounded-2xl p-6 border-l-4 border-l-blue-500 shadow-md hover:shadow-xl transition-all group"
+                                        className="bg-white  rounded-2xl p-6 border-l-4 border-l-blue-500 shadow-md hover:shadow-xl transition-all group"
                                     >
                                         <div className="flex justify-between items-start mb-4">
                                             <div className="flex items-center space-x-4">
-                                                <div className="w-14 h-14 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center border-2 border-blue-200 dark:border-blue-800">
+                                                <div className="w-14 h-14 rounded-xl bg-blue-100  text-blue-600  flex items-center justify-center border-2 border-blue-200 ">
                                                     <Building2 className="w-7 h-7" />
                                                 </div>
                                                 <div>
@@ -1159,7 +1159,7 @@ export default function DashboardPage() {
                                                             {fac.type || "Blood Bank"}
                                                         </span>
                                                     </div>
-                                                    <div className="flex items-center text-sm text-slate-500 dark:text-slate-400 mt-1">
+                                                    <div className="flex items-center text-sm text-slate-500  mt-1">
                                                         <MapPin className="w-3.5 h-3.5 mr-1 text-slate-400" />
                                                         {fac.location}
                                                     </div>
@@ -1168,15 +1168,15 @@ export default function DashboardPage() {
                                         </div>
 
                                         {/* INVENTORY DISPLAY */}
-                                        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 mt-5 border border-slate-100 dark:border-slate-700">
+                                        <div className="bg-slate-50  rounded-xl p-4 mt-5 border border-slate-100 ">
                                             <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center">
                                                 <Droplet className="w-3.5 h-3.5 mr-1" /> Current Inventory
                                             </div>
                                             <div className="flex flex-wrap gap-2">
                                                 {fac.inventory && Object.keys(fac.inventory).map(bg => (
                                                     <div key={bg} className={`px-3 py-1.5 rounded-lg border flex flex-col items-center min-w-[60px] ${fac.inventory[bg] > 0
-                                                        ? (filterGroup === bg || filterGroup === "All" ? 'bg-red-50 border-red-200 text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400' : 'bg-white border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300')
-                                                        : 'bg-slate-50 border-slate-200 text-slate-400 dark:bg-slate-800/50 dark:border-slate-800 dark:text-slate-600 opacity-50'
+                                                        ? (filterGroup === bg || filterGroup === "All" ? 'bg-red-50 border-red-200 text-red-700   ' : 'bg-white border-slate-200 text-slate-700   ')
+                                                        : 'bg-slate-50 border-slate-200 text-slate-400    opacity-50'
                                                         }`}>
                                                         <span className="font-bold">{bg}</span>
                                                         <span className="text-xs">{fac.inventory[bg]} units</span>
@@ -1189,7 +1189,7 @@ export default function DashboardPage() {
                                         </div>
 
                                         <div className="mt-4 flex justify-between items-center px-1">
-                                            <div className="text-sm font-semibold flex items-center text-slate-600 dark:text-slate-300">
+                                            <div className="text-sm font-semibold flex items-center text-slate-600 ">
                                                 <Phone className="w-4 h-4 text-slate-400 mr-2" />
                                                 {fac.contact}
                                             </div>
@@ -1214,18 +1214,18 @@ export default function DashboardPage() {
                             initial={{ opacity: 0, y: 50, scale: 0.9 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="fixed bottom-6 right-6 bg-white dark:bg-slate-800 shadow-2xl border-l-4 border-red-500 rounded-xl p-5 max-w-sm z-50 flex items-start space-x-4 cursor-pointer"
+                            className="fixed bottom-6 right-6 bg-white  shadow-2xl border-l-4 border-red-500 rounded-xl p-5 max-w-sm z-50 flex items-start space-x-4 cursor-pointer"
                             onClick={() => {
                                 setToastMessage(null);
                                 setActiveTab("matches");
                             }}
                         >
-                            <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-full">
-                                <Bell className="w-6 h-6 text-red-600 dark:text-red-400 animate-pulse" />
+                            <div className="bg-red-100  p-2 rounded-full">
+                                <Bell className="w-6 h-6 text-red-600  animate-pulse" />
                             </div>
                             <div>
-                                <h4 className="font-bold text-slate-800 dark:text-white">{toastMessage.title}</h4>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug">{toastMessage.desc}</p>
+                                <h4 className="font-bold text-slate-800 ">{toastMessage.title}</h4>
+                                <p className="text-sm text-slate-500  mt-1 leading-snug">{toastMessage.desc}</p>
                             </div>
                         </motion.div>
                     )
