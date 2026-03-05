@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { collection, addDoc, query, onSnapshot, orderBy, where, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, query, onSnapshot, orderBy, where, serverTimestamp, getDocs, writeBatch } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
 import { MapPin, Search, AlertCircle, Phone, Clock, PlusCircle, Loader2, UserCircle, Hand, Bell, MessageCircle, Send, Building2, Droplet, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -63,7 +63,8 @@ export default function DashboardPage() {
     const [allUsers, setAllUsers] = useState<any[]>([]);
 
     // Notification State
-    const [toastMessage, setToastMessage] = useState<{ title: string, desc: string } | null>(null);
+    const [notifications, setNotifications] = useState<any[]>([]);
+    const [toastMessage, setToastMessage] = useState<{ title: string, desc: string, isRead?: boolean, id?: string } | null>(null);
 
     // Fetch Blood Requests Real-time
     useEffect(() => {
@@ -74,30 +75,44 @@ export default function DashboardPage() {
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-            // Check if there are NEW requests that match the user's registered blood group
-            if (activeTab !== "create" && userData?.bloodGroup) {
-                // If we already had requests loaded, and the count went up...
-                if (requests.length > 0 && data.length > requests.length) {
-                    const latestReq: any = data[0]; // because ordered by desc
-                    // If the latest request matches this donor
-                    if (latestReq.bloodGroup === userData.bloodGroup && latestReq.requesterId !== user.uid) {
-                        setToastMessage({
-                            title: "Emergency Match!",
-                            desc: `A new request for ${latestReq.bloodGroup} just arrived in ${latestReq.location}.`
-                        });
-                        // Auto-hide toast after 5s
-                        setTimeout(() => setToastMessage(null), 5000);
-                    }
-                }
-            }
-
             setRequests(data);
             setLoadingReqs(false);
         });
 
         return () => unsubscribe();
-    }, [user, requests.length, userData, activeTab]);
+    }, [user]);
+
+    // Fetch Targeted Notifications Real-time
+    useEffect(() => {
+        if (!user) return;
+
+        const q = query(
+            collection(db, `Users/${user.uid}/Notifications`),
+            orderBy("createdAt", "desc")
+        );
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setNotifications(data);
+
+            // Just for the toast: check if the first item is unread and perfectly new
+            if (data.length > 0) {
+                const latestNotif: any = data[0];
+                if (!latestNotif.read) {
+                    setToastMessage({
+                        id: latestNotif.id,
+                        title: "Targeted Emergency Match!",
+                        desc: latestNotif.message,
+                        isRead: false
+                    });
+                    // Auto-hide toast after 8s
+                    setTimeout(() => setToastMessage(null), 8000);
+                }
+            }
+        });
+
+        return () => unsubscribe();
+    }, [user]);
 
     // Fetch All Users for Admin
     useEffect(() => {
@@ -185,15 +200,53 @@ export default function DashboardPage() {
     const handleCreateRequest = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await addDoc(collection(db, "Requests"), {
+            // 1. Create the Request
+            const requestRef = await addDoc(collection(db, "Requests"), {
                 ...requestForm,
                 requesterId: user.uid,
                 status: "active",
                 createdAt: serverTimestamp()
             });
+
+            // 2. Targeted Notification Dispatch
+            // Find all registered donors whose blood group EXACTLY matches the requested group
+            const donorsQuery = query(
+                collection(db, "Users"),
+                where("isRegisteredDonor", "==", true),
+                where("bloodGroup", "==", requestForm.bloodGroup)
+            );
+
+            const donorsSnapshot = await getDocs(donorsQuery);
+
+            if (!donorsSnapshot.empty) {
+                // Use a batch write for atomic, efficient multi-document inserts
+                const { writeBatch, doc } = await import("firebase/firestore");
+                const batch = writeBatch(db);
+
+                donorsSnapshot.forEach((donorDoc) => {
+                    // Don't notify the requester themselves
+                    if (donorDoc.id !== user.uid) {
+                        const notificationRef = doc(collection(db, `Users/${donorDoc.id}/Notifications`));
+                        batch.set(notificationRef, {
+                            requestId: requestRef.id,
+                            message: `Urgent blood request: A patient requires ${requestForm.bloodGroup} blood near ${requestForm.location}. Please respond if you are available to donate.`,
+                            bloodGroup: requestForm.bloodGroup,
+                            location: requestForm.location,
+                            read: false,
+                            createdAt: serverTimestamp()
+                        });
+                    }
+                });
+
+                // Commit all notifications to Firestore
+                await batch.commit();
+            }
+
             setActiveTab("feed");
             setRequestForm({ patientName: "", bloodGroup: "A+", location: "", contact: "", urgency: "high", unitsRequired: 1, requiredBy: "" });
+            alert("Emergency request broadcasted! Matching donors have been notified.");
         } catch (err: any) {
+            console.error("Error posting request:", err);
             alert("Error posting request: " + err.message);
         }
     };
@@ -255,6 +308,22 @@ export default function DashboardPage() {
             await deleteDoc(doc(db, "Requests", requestId));
             alert("Request permanently deleted.");
         } catch (e: any) { alert(e.message); }
+    };
+
+    const markNotificationAsRead = async (notificationId: string) => {
+        try {
+            const { doc, updateDoc } = await import("firebase/firestore");
+            await updateDoc(doc(db, `Users/${user.uid}/Notifications`, notificationId), {
+                read: true
+            });
+        } catch (e: any) { console.error("Could not mark as read", e); }
+    };
+
+    const deleteNotification = async (notificationId: string) => {
+        try {
+            const { doc, deleteDoc } = await import("firebase/firestore");
+            await deleteDoc(doc(db, `Users/${user.uid}/Notifications`, notificationId));
+        } catch (e: any) { console.error("Could not delete notification", e); }
     };
 
     const filteredRequests = requests.filter(req => {
@@ -395,6 +464,15 @@ export default function DashboardPage() {
                 >
                     Messages
                     {chats.length > 0 && (
+                        <span className="absolute top-1 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                    )}
+                </button>
+                <button
+                    onClick={() => setActiveTab("notifications")}
+                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none relative ${activeTab === 'notifications' ? 'bg-white dark:bg-slate-700 shadow-sm text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
+                >
+                    Alerts
+                    {notifications.filter(n => !n.read).length > 0 && (
                         <span className="absolute top-1 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
                     )}
                 </button>
@@ -582,6 +660,66 @@ export default function DashboardPage() {
                                         </form>
                                     </div>
                                 </>
+                            )}
+                        </div>
+                    </motion.div>
+                )}
+
+                {/* Alerts Pane */}
+                {activeTab === "notifications" && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
+                        className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 relative max-w-2xl"
+                    >
+                        <h2 className="text-2xl font-bold mb-2 flex items-center text-slate-800 dark:text-white">
+                            <Bell className="mr-2 w-6 h-6 text-red-500" /> Emergency Alerts
+                        </h2>
+                        <p className="text-slate-500 mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">
+                            These are urgent requests from patients exactly matching your registered blood group.
+                        </p>
+
+                        <div className="space-y-4">
+                            {notifications.length === 0 ? (
+                                <div className="text-center text-slate-400 py-10 font-medium">
+                                    You have no targeted blood requests right now.
+                                </div>
+                            ) : (
+                                notifications.map(notif => (
+                                    <motion.div
+                                        key={notif.id}
+                                        initial={{ opacity: 0, y: 5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className={`p-5 rounded-2xl border ${!notif.read ? 'bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-800/30' : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700'}`}
+                                        onClick={() => !notif.read && markNotificationAsRead(notif.id)}
+                                    >
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="flex items-center gap-2">
+                                                {!notif.read && <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>}
+                                                <h4 className={`font-bold ${!notif.read ? 'text-red-700 dark:text-red-400' : 'text-slate-700 dark:text-slate-300'}`}>
+                                                    Targeted Request for {notif.bloodGroup}
+                                                </h4>
+                                            </div>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); deleteNotification(notif.id); }}
+                                                className="text-xs text-slate-400 hover:text-red-600 font-medium px-2 py-1 rounded bg-white dark:bg-slate-900 shadow-sm"
+                                            >
+                                                Dismiss
+                                            </button>
+                                        </div>
+                                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                                            {notif.message}
+                                        </p>
+
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setActiveTab("feed"); }}
+                                                className="text-xs font-bold bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm hover:border-slate-300 dark:hover:border-slate-500 transition-colors"
+                                            >
+                                                View all on Feed
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                ))
                             )}
                         </div>
                     </motion.div>

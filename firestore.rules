@@ -11,6 +11,14 @@ service cloud.firestore {
     // USERS (Donor Identity Protection)
     match /Users/{userId} {
       allow read, write: if isAdmin() || (request.auth != null && request.auth.uid == userId);
+      
+      // NOTIFICATIONS Subcollection
+      // Rule: Anyone logged in can create a notification (when broadcasting an emergency)
+      // Rule: Only the specific Donor can read or delete their own notifications.
+      match /Notifications/{notificationId} {
+        allow create: if request.auth != null;
+        allow read, update, delete: if isAdmin() || (request.auth != null && request.auth.uid == userId);
+      }
     }
 
     // REQUESTS (Emergency Broadcasts)
