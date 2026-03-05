@@ -209,38 +209,66 @@ export default function DashboardPage() {
             });
 
             // 2. Targeted Notification Dispatch
-            // Find all registered donors whose blood group EXACTLY matches the requested group and who are eligible to donate
+            // Find all registered donors who are eligible & exactly match the requested group
+            // Phase 14 Update: also require them to be `available == true` matching the exact string request
             const donorsQuery = query(
                 collection(db, "Users"),
                 where("isRegisteredDonor", "==", true),
                 where("isEligibleToDonate", "==", true),
+                where("available", "==", true),
                 where("bloodGroup", "==", requestForm.bloodGroup)
             );
 
             const donorsSnapshot = await getDocs(donorsQuery);
 
             if (!donorsSnapshot.empty) {
-                // Use a batch write for atomic, efficient multi-document inserts
+                // Use a batch write for atomic, efficient multi-document inserts (In-App notifications)
                 const { writeBatch, doc } = await import("firebase/firestore");
                 const batch = writeBatch(db);
+                const notifiedDonorIds: string[] = [];
+
+                const exactMessage = `Urgent Blood Request: A patient requires ${requestForm.bloodGroup} blood near ${requestForm.location}. Please check the BloodConnect app if you are available to donate.`;
 
                 donorsSnapshot.forEach((donorDoc) => {
                     // Don't notify the requester themselves
                     if (donorDoc.id !== user.uid) {
+                        // Create Dashboard/In-App Alert
                         const notificationRef = doc(collection(db, `Users/${donorDoc.id}/Notifications`));
                         batch.set(notificationRef, {
                             requestId: requestRef.id,
-                            message: `Urgent blood request: A patient requires ${requestForm.bloodGroup} blood near ${requestForm.location}. Please respond if you are available to donate.`,
+                            message: exactMessage,
                             bloodGroup: requestForm.bloodGroup,
                             location: requestForm.location,
                             read: false,
                             createdAt: serverTimestamp()
                         });
+                        notifiedDonorIds.push(donorDoc.id);
                     }
                 });
 
-                // Commit all notifications to Firestore
+                // Commit all in-app notifications to Firestore
                 await batch.commit();
+
+                // 3. Dispatch Email Notifications via Backend
+                if (notifiedDonorIds.length > 0) {
+                    try {
+                        await fetch('/api/notify-donors', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                donorIds: notifiedDonorIds,
+                                requestDetails: {
+                                    requestId: requestRef.id, // For the backend to log metrics correctly
+                                    bloodGroup: requestForm.bloodGroup,
+                                    location: requestForm.location
+                                }
+                            })
+                        });
+                    } catch (emailErr) {
+                        console.error("Failed to forward emails to Notification API:", emailErr);
+                        // We still allow the request to succeed locally if email fails
+                    }
+                }
             }
 
             setActiveTab("feed");
