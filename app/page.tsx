@@ -97,8 +97,9 @@ export default function LandingPage() {
           >
             A centralized, real-time platform connecting blood donors with recipients during critical moments.
           </motion.p>
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Blood Connect Logo" className="w-auto h-12" />
+          <div className="flex items-center gap-4 bg-white/40 backdrop-blur-md px-6 py-4 rounded-3xl w-fit border border-white/60 shadow-sm">
+            <img src="/logo.png" alt="Blood Connect Logo" className="w-auto h-10 md:h-12 object-contain mix-blend-multiply" />
+            <span className="text-2xl md:text-3xl font-extrabold text-[#590d22] tracking-tight">Blood Connect</span>
           </div>
         </section>
 
