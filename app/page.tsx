@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Droplet, Heart, Shield, Activity, ArrowRight, UserPlus, LogIn } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { auth, db } from "@/lib/firebase/config";
 import { doc, setDoc } from "firebase/firestore";
@@ -215,8 +216,8 @@ export default function LandingPage() {
       {/* Footer Links */}
       <footer className="absolute bottom-6 md:bottom-10 w-full px-6 flex justify-between items-center text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#9ca3af] dark:text-slate-600 z-10">
         <div className="flex gap-6 sm:gap-8 lg:px-6">
-          <a className="hover:text-medical-red transition-colors" href="#">Privacy Policy</a>
-          <a className="hover:text-medical-red transition-colors" href="#">Terms of Service</a>
+          <Link className="hover:text-medical-red transition-colors" href="/privacy">Privacy Policy</Link>
+          <Link className="hover:text-medical-red transition-colors" href="/terms">Terms of Service</Link>
         </div>
         <div className="lg:px-6 hidden sm:block">© 2024 Blood Connect HQ. All rights reserved.</div>
       </footer>
