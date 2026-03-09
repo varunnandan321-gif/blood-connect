@@ -79,11 +79,8 @@ export default function LandingPage() {
         <div className="absolute bottom-0 left-0 p-32 bg-rose-200 rounded-full blur-3xl opacity-40 pointer-events-none transform -translate-x-1/2 translate-y-1/2"></div>
 
         <div className="relative z-10 space-y-2">
-          <div className="flex items-center space-x-3 mb-10">
-            <div className="bg-red-50 p-3 rounded-2xl shadow-sm border border-red-100">
-              <Droplet className="text-red-600 w-8 h-8" />
-            </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-slate-800">Blood Connect</h1>
+          <div className="flex items-center mb-8">
+            <img src="/logo.png" alt="Blood Connect Logo" className="w-auto h-20 md:h-24 object-contain drop-shadow-md" />
           </div>
 
           <motion.div

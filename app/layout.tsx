@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   description: "A real-time network connecting those who need blood with those who can give it.",
   manifest: "/manifest.json",
   themeColor: "#dc2626",
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
   appleWebApp: {
     capable: true,
     title: "Blood Connect",

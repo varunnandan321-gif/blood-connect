@@ -46,11 +46,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="min-h-screen bg-rose-50 flex flex-col font-sans">
             {/* Navbar */}
             <nav className="border-b border-rose-100 bg-white px-6 py-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
-                <Link href="/dashboard" className="flex items-center space-x-2">
-                    <div className="bg-red-50 p-2 rounded-xl border border-red-100 shadow-sm">
-                        <Droplet className="text-red-600 w-6 h-6" />
-                    </div>
-                    <span className="text-xl font-bold tracking-tight text-slate-800">Blood Connect</span>
+                <Link href="/dashboard" className="flex items-center group">
+                    <img src="/logo.png" alt="Blood Connect Logo" className="w-auto h-12 md:h-14 object-contain drop-shadow-sm group-hover:scale-105 transition-transform" />
                 </Link>
 
                 <div className="flex items-center space-x-6">
