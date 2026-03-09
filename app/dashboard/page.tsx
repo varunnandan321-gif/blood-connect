@@ -23,7 +23,7 @@ export default function DashboardPage() {
     // Safety check - though layout protects it, type safety ensures user exists before rendering this client component fully
     if (!user) return null;
 
-    const isAdmin = user?.email === "varunnandan321@gmail.com";
+    const isAdmin = user?.email === "blood.connect123@gmail.com";
 
     const [activeTab, setActiveTab] = useState("feed"); // 'feed' | 'my-requests' | 'matches' | 'messages' | 'profile' | 'facilities'
     const [requests, setRequests] = useState<any[]>([]);
