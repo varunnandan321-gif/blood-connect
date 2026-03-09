@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { collection, addDoc, query, onSnapshot, orderBy, where, serverTimestamp, getDocs, writeBatch } from "firebase/firestore";
+import { collection, addDoc, query, onSnapshot, orderBy, where, serverTimestamp, getDocs, writeBatch, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
-import { MapPin, Search, AlertCircle, Phone, Clock, PlusCircle, Loader2, UserCircle, Hand, Bell, MessageCircle, Send, Building2, Droplet, CheckCircle2 } from "lucide-react";
+import { MapPin, Search, AlertCircle, Phone, Clock, PlusCircle, Loader2, UserCircle, Hand, Bell, MessageCircle, Send, Building2, Droplet, CheckCircle2, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "./context";
 
@@ -151,6 +151,20 @@ export default function DashboardPage() {
         return () => unsubscribe();
     }, [activeChat]);
 
+    // Setup delete function for Admin Facilities
+    const handleDeleteFacility = async (facilityId: string) => {
+        if (!isAdmin || !user) return;
+        if (!window.confirm("Are you sure you want to permanently delete this facility from the database?")) return;
+
+        try {
+            await deleteDoc(doc(db, "Facilities", facilityId));
+            setToastMessage({ title: "Facility Removed", desc: "The facility has been successfully deleted from the platform." });
+        } catch (error) {
+            console.error("Error deleting facility: ", error);
+            setToastMessage({ title: "Error", desc: "Could not delete the facility. Please try again." });
+        }
+    };
+
     // Fetch Facilities
     useEffect(() => {
         if (!user) return;
@@ -182,12 +196,6 @@ export default function DashboardPage() {
 
             const q = query(collection(db, "Facilities"), orderBy("name"));
             onSnapshot(q, async (snapshot) => {
-                if (snapshot.empty && isAdmin) {
-                    console.log("Seeding faculties...");
-                    for (const fac of mockFacilities) {
-                        await addDoc(collection(db, "Facilities"), fac);
-                    }
-                }
                 setFacilities(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
                 setLoadingFacilities(false);
             });
@@ -1301,9 +1309,16 @@ export default function DashboardPage() {
                                                 <Phone className="w-4 h-4 text-slate-400 mr-2" />
                                                 {fac.contact}
                                             </div>
-                                            <a href={`tel:${fac.contact}`} className="text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors flex items-center">
-                                                Call Now <Clock className="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                            </a>
+                                            <div className="flex space-x-3 items-center">
+                                                {isAdmin && (
+                                                    <button onClick={() => handleDeleteFacility(fac.id)} className="text-sm font-bold text-red-600 hover:text-red-700 transition-colors flex items-center bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg border border-red-100 shadow-sm">
+                                                        <Trash2 className="w-4 h-4 mr-1.5" /> Delete
+                                                    </button>
+                                                )}
+                                                <a href={`tel:${fac.contact}`} className="text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors flex items-center bg-blue-50 px-3 py-1.5 rounded-lg">
+                                                    Call Now <Clock className="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                </a>
+                                            </div>
                                         </div>
                                     </motion.div>
                                 ))}
