@@ -8,11 +8,15 @@ import { useRouter } from "next/navigation";
 import { Loader2, LogOut, Droplet, User as UserIcon, Activity } from "lucide-react";
 import Link from "next/link";
 import { AuthContext } from "./context";
+import { collection, query, onSnapshot, where } from "firebase/firestore";
+import { DonorProfileModal } from "./components/DonorProfileModal";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [userData, setUserData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [showProfileModal, setShowProfileModal] = useState(false);
+    const [activeRequests, setActiveRequests] = useState<any[]>([]);
     const router = useRouter();
 
     useEffect(() => {
@@ -34,6 +38,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         return () => unsubscribe();
     }, [router]);
 
+    useEffect(() => {
+        if (!user) return;
+        const q = query(collection(db, "Requests"), where("status", "==", "active"));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            setActiveRequests(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        });
+        return () => unsubscribe();
+    }, [user]);
+
     if (loading) {
         return (
             <div className="min-h-screen bg-rose-50 flex items-center justify-center">
@@ -51,7 +64,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </Link>
 
                 <div className="flex items-center space-x-6">
-                    <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 bg-rose-100/50 border border-rose-200 rounded-full">
+                    <button onClick={() => setShowProfileModal(true)} className="hidden md:flex items-center space-x-2 px-3 py-1.5 bg-rose-100/50 border border-rose-200 rounded-full hover:bg-rose-100 transition-colors cursor-pointer">
                         <UserIcon className="w-4 h-4 text-slate-500" />
                         <span className="text-sm font-medium text-slate-700">
                             {userData?.name || user?.email}
@@ -61,7 +74,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 </span>
                             )}
                         </span>
-                    </div>
+                    </button>
 
                     <button
                         onClick={() => signOut(auth)}
@@ -79,6 +92,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     {children}
                 </AuthContext.Provider>
             </main>
+
+            <DonorProfileModal
+                isOpen={showProfileModal}
+                onClose={() => setShowProfileModal(false)}
+                userData={userData}
+                requests={activeRequests}
+            />
 
         </div>
     );
