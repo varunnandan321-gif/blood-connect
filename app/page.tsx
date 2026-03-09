@@ -188,7 +188,7 @@ export default function LandingPage() {
               </div>
 
               <div className="pt-2">
-                <button disabled={loading} className="w-full py-4 px-6 bg-gradient-to-r from-medical-red to-orange-600 text-white font-bold rounded-xl shadow-[0_6px_20px_-6px_rgba(225,29,72,0.5)] hover:shadow-[0_8px_25px_-8px_rgba(225,29,72,0.6)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-75" type="submit">
+                <button disabled={loading} className="w-full py-4 px-6 bg-white/40 dark:bg-stone-800/40 backdrop-blur-md border border-white/60 dark:border-stone-700/50 text-slate-800 dark:text-slate-100 font-bold rounded-xl shadow-sm hover:shadow-md hover:bg-white/60 dark:hover:bg-stone-700/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-75" type="submit">
                   {loading ? (
                     <Activity className="w-5 h-5 animate-spin" />
                   ) : (
