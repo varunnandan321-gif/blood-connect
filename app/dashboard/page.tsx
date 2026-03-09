@@ -1093,6 +1093,54 @@ export default function DashboardPage() {
                                 </table>
                             </div>
                         </div>
+
+                        {/* Admin Requests Management */}
+                        <div className="bg-white  p-8 rounded-3xl shadow-xl border border-slate-200  relative mb-8">
+                            <h2 className="text-2xl font-bold mb-6 flex items-center text-slate-800 ">
+                                <Hand className="mr-2 w-6 h-6 text-slate-500" /> Platform Requests
+                            </h2>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="border-b border-slate-200  text-sm">
+                                            <th className="pb-3 text-slate-500 font-semibold">Request ID</th>
+                                            <th className="pb-3 text-slate-500 font-semibold px-4">Patient</th>
+                                            <th className="pb-3 text-slate-500 font-semibold px-4">Group</th>
+                                            <th className="pb-3 text-slate-500 font-semibold px-4">Location</th>
+                                            <th className="pb-3 text-slate-500 font-semibold px-4">Status</th>
+                                            <th className="pb-3 text-slate-500 text-right font-semibold">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {requests.map((req: any) => (
+                                            <tr key={req.id} className="border-b border-slate-100  hover:bg-slate-50 :bg-white/50 transition-colors">
+                                                <td className="py-4 text-xs font-mono text-slate-400">{req.id}</td>
+                                                <td className="py-4 font-semibold text-sm px-4">{req.patientName || "N/A"}</td>
+                                                <td className="py-4 px-4 text-red-500 font-bold text-sm">{req.bloodGroup || "N/A"}</td>
+                                                <td className="py-4 px-4 text-sm text-slate-600 ">{req.location || "N/A"}</td>
+                                                <td className="py-4 px-4 text-sm font-bold">
+                                                    {req.status === 'active' ? (
+                                                        <span className="text-red-500">Active</span>
+                                                    ) : (
+                                                        <span className="text-green-500">Fulfilled</span>
+                                                    )}
+                                                </td>
+                                                <td className="py-4 text-right">
+                                                    <button onClick={() => handleDeleteRequest(req.id)} className="text-xs bg-red-100 text-red-600 hover:bg-red-600 hover:text-slate-800 px-3 py-1.5 rounded-lg font-bold transition-colors">
+                                                        Force Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {requests.length === 0 && (
+                                            <tr>
+                                                <td colSpan={6} className="py-8 text-center text-sm text-slate-400">No requests found on the platform.</td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </motion.div>
                 )}
 
