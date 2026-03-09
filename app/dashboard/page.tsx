@@ -338,6 +338,43 @@ export default function DashboardPage() {
         }
     };
 
+    const handleConfirmDonation = async (chat: any) => {
+        if (!confirm("Did you successfully donate blood for this specific emergency request?\n\nBy confirming, this request will be marked as fulfilled, tracked in the system, and your profile will enter a 120-day safety cooldown.")) return;
+
+        try {
+            const { doc, updateDoc, collection, addDoc, serverTimestamp } = await import("firebase/firestore");
+
+            // 1. Fulfill the Request and tag the donor
+            await updateDoc(doc(db, "Requests", chat.requestId), {
+                status: "fulfilled",
+                fulfilledBy: user.uid,
+                fulfilledByName: userData?.name || "Anonymous Donor",
+                fulfilledAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            });
+
+            // 2. Cooldown the Donor
+            await updateDoc(doc(db, "Users", user.uid), {
+                isEligibleToDonate: false,
+                lastDonationDate: serverTimestamp()
+            });
+
+            // 3. Log the structured donation event
+            await addDoc(collection(db, "DonationLogs"), {
+                donorId: user.uid,
+                requestId: chat.requestId,
+                bloodGroup: userData?.bloodGroup || "unknown",
+                date: serverTimestamp()
+            });
+
+            alert("Heroic! This emergency is now fulfilled. Thank you for saving a life. Your profile is on a temporary safety cooldown.");
+            setActiveTab("feed");
+        } catch (error: any) {
+            console.error("Donation confirmation failed:", error);
+            alert("Error confirming donation: " + error.message);
+        }
+    };
+
     const handleCloseRequest = async (requestId: string) => {
         if (!confirm("Are you sure you want to close this request? This means you have received the required blood.")) return;
         try {
@@ -722,6 +759,14 @@ export default function DashboardPage() {
                                                 </h3>
                                                 <p className="text-xs text-red-500 font-medium truncate">Matched Request: {activeChat.requestDetails?.bloodGroup} at {activeChat.requestDetails?.location}</p>
                                             </div>
+                                            {activeChat.donorId === user.uid && (
+                                                <button
+                                                    onClick={() => handleConfirmDonation(activeChat)}
+                                                    className="ml-3 shrink-0 bg-green-50 hover:bg-green-100 text-green-700 font-bold px-3 py-1.5 rounded-lg text-xs border border-green-200 transition-colors shadow-sm"
+                                                >
+                                                    <CheckCircle2 className="w-3.5 h-3.5 inline mr-1" /> Mark As Donated
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
 
@@ -1122,7 +1167,19 @@ export default function DashboardPage() {
                                                     {req.status === 'active' ? (
                                                         <span className="text-red-500">Active</span>
                                                     ) : (
-                                                        <span className="text-green-500">Fulfilled</span>
+                                                        <div className="text-green-500">
+                                                            Fulfilled
+                                                            {req.fulfilledByName && (
+                                                                <div className="text-xs text-slate-600 font-normal mt-0.5">
+                                                                    by {req.fulfilledByName}
+                                                                </div>
+                                                            )}
+                                                            {req.fulfilledAt && (
+                                                                <div className="text-[10px] text-slate-400 font-normal mt-0.5">
+                                                                    {new Date(req.fulfilledAt?.toDate()).toLocaleString()}
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     )}
                                                 </td>
                                                 <td className="py-4 text-right">
