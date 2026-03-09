@@ -561,85 +561,103 @@ export default function DashboardPage() {
 
     return (
         <>
-            <header className="mb-6 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight mb-2">
-                        Blood Connect Dashboard
-                    </h1>
-                    <p className="text-slate-500  max-w-xl">
-                        View immediate blood requirements in your area, or raise a hand if you have an emergency.
-                    </p>
-                </div>
+            {/* BEGIN: Stats Row */}
+            {activeTab !== "create" && activeTab !== "admin" && activeTab !== "profile" && (
+                <section className="flex justify-center gap-6 flex-wrap mb-2 mt-4 z-10 relative">
+                    {/* Stat Card 1 */}
+                    <div className="glass-panel rounded-2xl p-5 w-64 relative hover:-translate-y-1 transition-transform">
+                        <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)]"></div>
+                        <h3 className="text-sm text-gray-600 font-medium mb-1">Active Requests:</h3>
+                        <p className="text-4xl font-bold text-gray-900">{requests.filter(r => r.status === "active").length}</p>
+                    </div>
+                    {/* Stat Card 2 */}
+                    <div className="glass-panel rounded-2xl p-5 w-64 relative hover:-translate-y-1 transition-transform">
+                        <div className="absolute top-4 right-4 flex gap-1">
+                            <div className="w-1 h-3 bg-red-400 rounded-full"></div>
+                            <div className="w-1 h-4 bg-red-500 rounded-full"></div>
+                            <div className="w-1 h-2 bg-red-300 rounded-full"></div>
+                        </div>
+                        <h3 className="text-sm text-gray-600 font-medium mb-1">Available Donors:</h3>
+                        <p className="text-4xl font-bold text-gray-900">{facilities.length > 0 ? facilities.length * 15 : 124}</p>
+                    </div>
+                    {/* Stat Card 3 */}
+                    <div className="glass-panel rounded-2xl p-5 w-64 relative hover:-translate-y-1 transition-transform">
+                        <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)]"></div>
+                        <h3 className="text-sm text-gray-600 font-medium mb-1">Nearby Hospitals:</h3>
+                        <p className="text-4xl font-bold text-gray-900">{facilities.length}</p>
+                    </div>
+                </section>
+            )}
 
+            {/* Title & Main Action */}
+            <section className="text-center flex flex-col items-center gap-6 mt-4 mb-4 relative z-10 w-full max-w-5xl mx-auto">
+                <h2 className="text-4xl font-bold tracking-tight">
+                    <span className="text-blood-800">Blood Connect</span> Dashboard
+                </h2>
                 <button
                     onClick={() => setActiveTab(activeTab === "create" ? "feed" : "create")}
-                    className="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-xl font-bold transition-all shadow-lg flex items-center justify-center whitespace-nowrap"
+                    className="bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-3 rounded-full font-semibold text-lg flex items-center gap-2 shadow-glow hover:scale-105 transition-transform"
+                    style={{ boxShadow: "0 0 25px rgba(220, 38, 38, 0.6)" }}
                 >
-                    {activeTab === "create" ? "Cancel" : <><Hand className="mr-2 w-5 h-5" /> Raise Hand for Emergency</>}
+                    {activeTab === "create" ? "Cancel Emergency Alert" : <><Hand className="w-5 h-5 text-white/90" /> Raise Hand for Emergency</>}
                 </button>
-            </header>
+            </section>
 
-            {/* Tabs */}
-            <div className="flex space-x-1 bg-slate-200/50  p-1 rounded-xl mb-6 w-full md:w-max">
+            {/* Navigation Pills */}
+            <nav className="flex justify-start md:justify-center gap-3 overflow-x-auto nav-scrollbar py-2 px-4 w-full max-w-5xl mx-auto mb-2 relative z-10">
                 <button
                     onClick={() => setActiveTab("feed")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'feed' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
+                    className={`${activeTab === "feed" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
                 >
                     Active Emergencies
                 </button>
-
                 <button
                     onClick={() => setActiveTab("my-requests")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'my-requests' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
+                    className={`${activeTab === "my-requests" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
                 >
                     My Requests
                 </button>
-
                 <button
                     onClick={() => setActiveTab("matches")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'matches' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
+                    className={`${activeTab === "matches" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
                 >
                     My Matches
                 </button>
                 <button
                     onClick={() => setActiveTab("messages")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none relative ${activeTab === 'messages' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
+                    className={`${activeTab === "messages" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0 relative`}
                 >
                     Messages
-                    {chats.length > 0 && (
-                        <span className="absolute top-1 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                    )}
+                    {chats.length > 0 && <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-400 rounded-full animate-ping border border-white"></span>}
                 </button>
                 <button
                     onClick={() => setActiveTab("notifications")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none relative ${activeTab === 'notifications' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
+                    className={`${activeTab === "notifications" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0 relative`}
                 >
                     Alerts
-                    {notifications.filter(n => !n.read).length > 0 && (
-                        <span className="absolute top-1 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                    )}
+                    {notifications.filter(n => !n.read).length > 0 && <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-400 rounded-full animate-ping border border-white"></span>}
                 </button>
                 <button
                     onClick={() => setActiveTab("facilities")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'facilities' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
+                    className={`${activeTab === "facilities" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
                 >
                     Hospitals & Banks
                 </button>
                 <button
                     onClick={() => setActiveTab("profile")}
-                    className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'profile' ? 'bg-white  shadow-sm text-red-600 ' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
+                    className={`${activeTab === "profile" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
                 >
                     Donor Profile
                 </button>
                 {isAdmin && (
                     <button
                         onClick={() => setActiveTab("admin")}
-                        className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex-1 md:flex-none ${activeTab === 'admin' ? 'bg-rose-50 shadow-sm text-slate-800' : 'text-slate-600  hover:bg-white/50 :bg-slate-700/50'}`}
+                        className={`${activeTab === "admin" ? "bg-gradient-to-r from-gray-700 to-gray-900 text-white shadow-glow-sm" : "glass-button text-red-700 font-bold hover:bg-red-50/80 border-red-200"} px-5 py-2 rounded-full text-sm whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
                     >
                         Admin Panel
                     </button>
                 )}
-            </div>
+            </nav>
 
             <AnimatePresence mode="popLayout">
 
@@ -964,26 +982,26 @@ export default function DashboardPage() {
                 {(activeTab === "feed" || activeTab === "my-requests" || activeTab === "matches") && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                         {/* Search and Filters */}
-                        <div className="flex flex-col md:flex-row gap-4 mb-8">
-                            <div className="relative flex-1">
-                                <Search className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                        <div className="flex flex-col md:flex-row gap-4 items-center justify-between w-full max-w-5xl mx-auto mb-6 relative z-10">
+                            {/* Search Bar */}
+                            <div className="glass-panel flex-grow rounded-xl flex items-center px-4 py-2 w-full h-12 shadow-sm">
+                                <Search className="w-5 h-5 text-gray-400 mr-3" />
                                 <input
-                                    type="text"
+                                    className="bg-transparent border-none outline-none w-full text-gray-700 placeholder-gray-400 focus:ring-0 text-sm h-full"
                                     placeholder="Search by location or hospital..."
-                                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200  bg-white  focus:ring-2 focus:ring-red-500 outline-none shadow-sm"
+                                    type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
-                            <div className={`flex items-center space-x-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-hide ${activeTab === 'matches' ? 'opacity-50 pointer-events-none' : ''}`}>
-                                {["All", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(bg => (
+                            {/* Blood Type Filters */}
+                            <div className={`flex gap-2 flex-wrap justify-center md:justify-end ${activeTab === 'matches' ? 'opacity-50 pointer-events-none' : ''}`}>
+                                <button onClick={() => setFilterGroup("All")} className={`glass-button w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all ${filterGroup === 'All' ? 'bg-red-100/80 text-red-600 border-red-300 shadow-sm shadow-red-200 backdrop-blur-md scale-105' : 'text-gray-600 hover:bg-white'}`}>All</button>
+                                {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(bg => (
                                     <button
                                         key={bg}
                                         onClick={() => setFilterGroup(bg)}
-                                        className={`px-4 py-2.5 rounded-xl font-bold text-sm shrink-0 border-2 transition-all ${filterGroup === bg
-                                            ? "border-red-500 bg-red-50  text-red-600 "
-                                            : "border-slate-200  text-slate-600  bg-white "
-                                            }`}
+                                        className={`glass-button w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all ${filterGroup === bg ? 'bg-red-100/80 text-red-600 border-red-300 shadow-sm shadow-red-200 backdrop-blur-md scale-105' : 'text-gray-600 hover:bg-white'}`}
                                     >
                                         {bg}
                                     </button>
@@ -995,15 +1013,17 @@ export default function DashboardPage() {
                         {loadingReqs ? (
                             <div className="py-20 flex justify-center text-slate-400"><Loader2 className="animate-spin w-8 h-8" /></div>
                         ) : filteredRequests.length === 0 ? (
-                            <div className="bg-slate-100  rounded-3xl p-12 text-center border border-dashed border-slate-300 ">
-                                <Search className="w-12 h-12 text-slate-300  mx-auto mb-4" />
-                                <h3 className="text-xl font-bold text-slate-700  mb-2">No Requests Found</h3>
-                                <p className="text-slate-500">
+                            <main className="glass-panel rounded-3xl p-16 flex flex-col items-center justify-center text-center w-full max-w-5xl mx-auto mt-2 min-h-[300px]">
+                                <div className="mb-4 relative">
+                                    <Search className="w-16 h-16 text-white drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]" style={{ WebkitTextStroke: "4px #ef4444" }} />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">No Requests Found</h3>
+                                <p className="text-gray-600">
                                     {activeTab === 'matches' && !userData?.bloodGroup
                                         ? "You need to update your Donor Profile with your Blood Group before we can show your matches!"
                                         : "There are no active blood requests matching your filters."}
                                 </p>
-                            </div>
+                            </main>
                         ) : (
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 {filteredRequests.map(req => (

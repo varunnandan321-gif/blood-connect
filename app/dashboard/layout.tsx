@@ -56,42 +56,60 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
 
     return (
-        <div className="min-h-screen bg-rose-50 flex flex-col font-sans">
-            {/* Navbar */}
-            <nav className="border-b border-rose-100 bg-white px-6 py-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
-                <Link href="/dashboard" className="flex items-center group">
-                    <img src="/logo.png" alt="Blood Connect Logo" className="w-auto h-12 md:h-14 object-contain drop-shadow-sm group-hover:scale-105 transition-transform" />
-                </Link>
+        <div className="min-h-screen bg-rose-50 flex flex-col font-sans relative overflow-x-hidden text-gray-800">
+            {/* Background Blob Elements */}
+            <div className="blob-2"></div>
+            <div className="blob-1"></div>
+            <div className="bg-watermark">BLOOD</div>
+            <div className="ekg-line"></div>
 
-                <div className="flex items-center space-x-6">
-                    <button onClick={() => setShowProfileModal(true)} className="hidden md:flex items-center space-x-2 px-3 py-1.5 bg-rose-100/50 border border-rose-200 rounded-full hover:bg-rose-100 transition-colors cursor-pointer">
-                        <UserIcon className="w-4 h-4 text-slate-500" />
-                        <span className="text-sm font-medium text-slate-700">
-                            {userData?.name || user?.email}
-                            {userData?.role && (
-                                <span className="ml-2 text-xs uppercase tracking-wider font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded text-center">
-                                    {userData.role}
-                                </span>
-                            )}
-                        </span>
-                    </button>
+            <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col gap-8 relative z-10 w-full">
+                {/* Main Header */}
+                <header className="glass-panel rounded-2xl p-4 flex justify-between items-center shadow-glass">
+                    {/* Logo area */}
+                    <Link href="/dashboard" className="flex items-center gap-3 group">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white shadow-glow-sm transition-transform group-hover:scale-105">
+                            <Droplet className="w-5 h-5 drop-shadow-md" />
+                        </div>
+                        <div className="leading-tight hidden sm:block">
+                            <h1 className="font-bold text-xl text-blood-900 m-0 leading-none tracking-tight">Blood</h1>
+                            <h1 className="font-bold text-xl text-gray-900 m-0 leading-none tracking-tight">Connect</h1>
+                        </div>
+                    </Link>
 
-                    <button
-                        onClick={() => signOut(auth)}
-                        className="text-slate-500 hover:text-red-500 transition-colors flex items-center"
-                    >
-                        <LogOut className="w-5 h-5 md:mr-2" />
-                        <span className="hidden md:inline font-semibold">Sign Out</span>
-                    </button>
-                </div>
-            </nav>
+                    {/* User profile area */}
+                    <div className="flex items-center gap-4 md:gap-6">
+                        <button onClick={() => setShowProfileModal(true)} className="flex items-center gap-3 text-right group cursor-pointer transition-transform hover:scale-105">
+                            <div className="hidden md:block">
+                                <div className="font-semibold text-sm text-gray-900 leading-tight">
+                                    {userData?.name || user?.email?.split('@')[0]}
+                                </div>
+                                <div className="text-[10px] text-gray-500 tracking-wider font-bold">
+                                    {userData?.role ? userData.role.toUpperCase() : "DONOR"}
+                                </div>
+                            </div>
+                            <div className="w-10 h-10 rounded-xl glass-panel flex items-center justify-center shadow-sm group-hover:bg-white/60 transition-colors">
+                                <UserIcon className="w-5 h-5 text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+                            </div>
+                        </button>
 
-            {/* Main Content Area */}
-            <main className="flex-1 p-6 md:p-12 max-w-7xl mx-auto w-full flex flex-col gap-6">
-                <AuthContext.Provider value={{ user, userData }}>
-                    {children}
-                </AuthContext.Provider>
-            </main>
+                        <button
+                            onClick={() => signOut(auth)}
+                            className="text-sm font-medium text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"
+                        >
+                            <span className="hidden sm:inline">Sign Out</span>
+                            <LogOut className="w-4 h-4" />
+                        </button>
+                    </div>
+                </header>
+
+                {/* Main Content Area */}
+                <main className="flex-1 w-full flex flex-col gap-6">
+                    <AuthContext.Provider value={{ user, userData }}>
+                        {children}
+                    </AuthContext.Provider>
+                </main>
+            </div>
 
             <DonorProfileModal
                 isOpen={showProfileModal}
@@ -99,7 +117,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 userData={userData}
                 requests={activeRequests}
             />
-
         </div>
     );
 }
