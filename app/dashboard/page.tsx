@@ -892,7 +892,7 @@ export default function DashboardPage() {
                                 <button type="submit" disabled={updatingProfile} className="w-full bg-rose-50  hover:bg-white :bg-slate-600 text-slate-800 font-bold py-4 rounded-xl transition-all shadow-md flex justify-center items-center text-lg disabled:opacity-50">
                                     {updatingProfile ? <Loader2 className="animate-spin w-5 h-5" /> : "Save Profile Details"}
                                 </button>
-                                {userData?.isRegisteredDonor && userData?.isEligibleToDonate !== false && (
+                                {userData?.isEligibleToDonate !== false && (
                                     <button
                                         type="button"
                                         onClick={handleDonateBlood}
