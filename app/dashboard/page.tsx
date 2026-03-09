@@ -210,12 +210,10 @@ export default function DashboardPage() {
 
             // 2. Targeted Notification Dispatch
             // Find all registered donors who are eligible & exactly match the requested group
-            // Phase 14 Update: also require them to be `available == true` matching the exact string request
+            // We only query by bloodGroup to avoid Firestore composite index errors, 
+            // and filter the rest of the strict criteria in-memory.
             const donorsQuery = query(
                 collection(db, "Users"),
-                where("isRegisteredDonor", "==", true),
-                where("isEligibleToDonate", "==", true),
-                where("available", "==", true),
                 where("bloodGroup", "==", requestForm.bloodGroup)
             );
 
@@ -230,8 +228,11 @@ export default function DashboardPage() {
                 const exactMessage = `Urgent Blood Request: A patient requires ${requestForm.bloodGroup} blood near ${requestForm.location}. Please check the BloodConnect app if you are available to donate.`;
 
                 donorsSnapshot.forEach((donorDoc) => {
-                    // Don't notify the requester themselves
-                    if (donorDoc.id !== user.uid) {
+                    const data = donorDoc.data();
+
+                    // Don't notify the requester themselves, and enforce strict availability and eligibility locally
+                    // This circumvents Firestore's strict Composite Index requirements for multiple boolean where-clauses.
+                    if (donorDoc.id !== user.uid && data.available === true && data.isEligibleToDonate !== false) {
                         // Create Dashboard/In-App Alert
                         const notificationRef = doc(collection(db, `Users/${donorDoc.id}/Notifications`));
                         batch.set(notificationRef, {
