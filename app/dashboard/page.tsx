@@ -1110,6 +1110,7 @@ export default function DashboardPage() {
                                         <tr className="border-b border-slate-200  text-sm">
                                             <th className="pb-3 text-slate-500 font-semibold">User ID</th>
                                             <th className="pb-3 text-slate-500 font-semibold px-4">Name</th>
+                                            <th className="pb-3 text-slate-500 font-semibold px-4">Email</th>
                                             <th className="pb-3 text-slate-500 font-semibold px-4">Group</th>
                                             <th className="pb-3 text-slate-500 font-semibold px-4">Location</th>
                                             <th className="pb-3 text-slate-500 text-right font-semibold">Actions</th>
@@ -1120,6 +1121,7 @@ export default function DashboardPage() {
                                             <tr key={u.id} className="border-b border-slate-100  hover:bg-slate-50 :bg-white/50 transition-colors">
                                                 <td className="py-4 text-xs font-mono text-slate-400">{u.id}</td>
                                                 <td className="py-4 font-semibold text-sm px-4">{u.name || "N/A"}</td>
+                                                <td className="py-4 text-sm text-slate-500 px-4">{u.email || "N/A"}</td>
                                                 <td className="py-4 px-4 text-red-500 font-bold text-sm">{u.bloodGroup || "N/A"}</td>
                                                 <td className="py-4 px-4 text-sm text-slate-600 ">{u.location || "N/A"}</td>
                                                 <td className="py-4 text-right">
