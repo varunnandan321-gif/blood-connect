@@ -18,6 +18,7 @@ export default function LandingPage() {
     email: "",
     password: "",
     name: "",
+    bloodGroup: "",
   });
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -38,6 +39,7 @@ export default function LandingPage() {
           uid: user.uid,
           email: user.email,
           name: formData.name,
+          bloodGroup: formData.bloodGroup || null,
           role: "user", // Default role since everyone can do everything
           createdAt: new Date().toISOString()
         });
@@ -172,6 +174,21 @@ export default function LandingPage() {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
+
+            {!isLogin && (
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Your Blood Group</label>
+                <select
+                  required
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition-all font-bold placeholder:text-slate-400"
+                  value={formData.bloodGroup}
+                  onChange={(e) => setFormData({ ...formData, bloodGroup: e.target.value })}
+                >
+                  <option value="" disabled className="font-normal text-slate-400">Select Group...</option>
+                  {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(bg => <option key={bg} value={bg}>{bg}</option>)}
+                </select>
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
