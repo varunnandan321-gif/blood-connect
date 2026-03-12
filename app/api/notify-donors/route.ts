@@ -5,54 +5,58 @@ import * as admin from 'firebase-admin';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { donorIds, requestDetails } = body;
+        const { requestDetails } = body;
 
-        if (!donorIds || !Array.isArray(donorIds) || donorIds.length === 0) {
-            return NextResponse.json({ success: false, message: "No donors provided" }, { status: 400 });
+        if (!requestDetails || !requestDetails.bloodGroup) {
+            return NextResponse.json({ success: false, message: "Invalid request details" }, { status: 400 });
         }
 
         const adminDb = getAdminDb();
         const notifiedDonors = [];
 
-        // In a real application, you would initialize Resend/SendGrid right here:
-        // const resend = new Resend(process.env.RESEND_API_KEY);
+        // Fetch eligible donors matching the blood group using standard server-side querying
+        const donorsSnapshot = await adminDb.collection("Users").where("bloodGroup", "==", requestDetails.bloodGroup).get();
 
-        for (const donorId of donorIds) {
-            // Fetch donor's email from the secure Users collection
-            const donorSnapshot = await adminDb.collection("Users").doc(donorId).get();
+        const batch = adminDb.batch();
 
-            if (donorSnapshot.exists) {
-                const donorData = donorSnapshot.data();
-                if (donorData?.email) {
+        for (const donorDoc of donorsSnapshot.docs) {
+            const donorData = donorDoc.data();
 
-                    const notificationMessage = `Urgent Blood Request: A patient requires ${requestDetails.bloodGroup} blood near ${requestDetails.location}. Please check the BloodConnect app if you are available to donate.`;
+            // Exclude the requester and check eligibility
+            if (donorDoc.id !== requestDetails.requesterId && donorData.available === true && donorData.isEligibleToDonate !== false) {
 
-                    // --- MOCK EMAIL DISPATCH ---
+                const notificationMessage = `Urgent Blood Request: A patient requires ${requestDetails.bloodGroup} blood near ${requestDetails.location}. Please check the BloodConnect app if you are available to donate.`;
+
+                // 1. Create In-App Notification using batch
+                const notificationRef = adminDb.collection(`Users/${donorDoc.id}/Notifications`).doc();
+                batch.set(notificationRef, {
+                    requestId: requestDetails.requestId,
+                    message: notificationMessage,
+                    bloodGroup: requestDetails.bloodGroup,
+                    location: requestDetails.location,
+                    read: false,
+                    createdAt: admin.firestore.FieldValue.serverTimestamp()
+                });
+
+                // 2. Mock Email Dispatch
+                if (donorData.email) {
                     console.log(`\n\n ================ EMAIL DISPATCH ================`);
-                    console.log(`To: ${donorData.name || 'Anonymous'} <${donorData.email} > `);
-                    console.log(`From: alerts @bloodconnect.com`);
+                    console.log(`To: ${donorData.name || 'Anonymous'} <${donorData.email}>`);
+                    console.log(`From: alerts@bloodconnect.com`);
                     console.log(`Subject: Urgent Match: ${requestDetails.bloodGroup} Blood Needed`);
                     console.log(`Body: \n${notificationMessage} \n`);
                     console.log(`================================================\n\n`);
-                    // ---------------------------
-
-                    /*
-                    Example Resend Implementation:
-                    await resend.emails.send({
-                        from: 'Alerts <alerts@bloodconnect.com>',
-                        to: [donorData.email],
-                        subject: `Urgent Match: ${ requestDetails.bloodGroup } Blood Needed`,
-                        html: `< p > ${ notificationMessage } </p>`
-                    });
-                    */
-
-                    notifiedDonors.push(donorId);
                 }
+
+                notifiedDonors.push(donorDoc.id);
             }
         }
 
-        // Log the dispatch event to Firestore for tracking
+        // Commit all in-app notifications to Firestore securely via the backend
         if (notifiedDonors.length > 0) {
+            await batch.commit();
+
+            // Log the dispatch event to Firestore for tracking
             await adminDb.collection("NotificationLogs").add({
                 requestId: requestDetails.requestId,
                 notificationType: "blood_request",
@@ -63,12 +67,12 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
             success: true,
-            message: `Mock emails sent to ${notifiedDonors.length} donors.`,
+            message: `Notifications sent to ${notifiedDonors.length} donors.`,
             notifiedCount: notifiedDonors.length
         });
 
     } catch (error: any) {
-        console.error("Email Dispatch Error:", error);
+        console.error("Notification Dispatch Error:", error);
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }

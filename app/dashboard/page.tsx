@@ -216,68 +216,24 @@ export default function DashboardPage() {
                 createdAt: serverTimestamp()
             });
 
-            // 2. Targeted Notification Dispatch
-            // Find all registered donors who are eligible & exactly match the requested group
-            // We only query by bloodGroup to avoid Firestore composite index errors, 
-            // and filter the rest of the strict criteria in-memory.
-            const donorsQuery = query(
-                collection(db, "Users"),
-                where("bloodGroup", "==", requestForm.bloodGroup)
-            );
-
-            const donorsSnapshot = await getDocs(donorsQuery);
-
-            if (!donorsSnapshot.empty) {
-                // Use a batch write for atomic, efficient multi-document inserts (In-App notifications)
-                const { writeBatch, doc } = await import("firebase/firestore");
-                const batch = writeBatch(db);
-                const notifiedDonorIds: string[] = [];
-
-                const exactMessage = `Urgent Blood Request: A patient requires ${requestForm.bloodGroup} blood near ${requestForm.location}. Please check the BloodConnect app if you are available to donate.`;
-
-                donorsSnapshot.forEach((donorDoc) => {
-                    const data = donorDoc.data();
-
-                    // Don't notify the requester themselves, and enforce strict availability and eligibility locally
-                    // This circumvents Firestore's strict Composite Index requirements for multiple boolean where-clauses.
-                    if (donorDoc.id !== user.uid && data.available === true && data.isEligibleToDonate !== false) {
-                        // Create Dashboard/In-App Alert
-                        const notificationRef = doc(collection(db, `Users/${donorDoc.id}/Notifications`));
-                        batch.set(notificationRef, {
+            // 2. Dispatch Notifications via Backend API
+            // The API handles querying users and batch-writing notifications to avoid client-side read permission errors.
+            try {
+                await fetch('/api/notify-donors', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        requestDetails: {
                             requestId: requestRef.id,
-                            message: exactMessage,
+                            requesterId: user.uid,
                             bloodGroup: requestForm.bloodGroup,
-                            location: requestForm.location,
-                            read: false,
-                            createdAt: serverTimestamp()
-                        });
-                        notifiedDonorIds.push(donorDoc.id);
-                    }
+                            location: requestForm.location
+                        }
+                    })
                 });
-
-                // Commit all in-app notifications to Firestore
-                await batch.commit();
-
-                // 3. Dispatch Email Notifications via Backend
-                if (notifiedDonorIds.length > 0) {
-                    try {
-                        await fetch('/api/notify-donors', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                donorIds: notifiedDonorIds,
-                                requestDetails: {
-                                    requestId: requestRef.id, // For the backend to log metrics correctly
-                                    bloodGroup: requestForm.bloodGroup,
-                                    location: requestForm.location
-                                }
-                            })
-                        });
-                    } catch (emailErr) {
-                        console.error("Failed to forward emails to Notification API:", emailErr);
-                        // We still allow the request to succeed locally if email fails
-                    }
-                }
+            } catch (notifyErr) {
+                console.error("Failed to trigger Notification API:", notifyErr);
+                // Allow request to remain created even if notifying fails
             }
 
             setActiveTab("feed");
