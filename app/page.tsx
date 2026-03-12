@@ -107,22 +107,6 @@ export default function LandingPage() {
               A centralized real-time platform connecting blood donors with recipients during critical moments. Your contribution can change a story today.
             </p>
           </div>
-
-          <div className="fade-up-v2 flex items-center gap-5 mt-4" style={{ animationDelay: '0.7s' }}>
-            <div className="flex -space-x-3">
-              <div className="w-10 h-10 rounded-full border-[3px] border-[#fdfaf9] bg-orange-100 flex shadow-sm items-center justify-center overflow-hidden">
-                <div className="w-full h-full bg-[url('https://lh3.googleusercontent.com/aida-public/AB6AXuCJc_uzu8ElKF_G_VigZSuvselmy3SiLmfUQnXHliWAZviPNg3baqPZ0i8A8LUDzDmoNVEllpmBrpu8NScrOl-PCuNASB5siYXN5TlJvArShCiPSZKuGhACcOUeOBpSZ73u7qLEiwSA3eD02P--80xBdarhcb4d6Al4M5tF00CMXwEHXYUR7unU1OUTBVALLGgGOgh388ChattNKlw_zsESS9NKAyvl3rtZOG_nB5cEo6axtSlDmJUjs1toNcQwtDKjwTM9_0hHSbE')] bg-cover bg-center"></div>
-              </div>
-              <div className="w-10 h-10 rounded-full border-[3px] border-[#fdfaf9] bg-blue-100 flex shadow-sm items-center justify-center overflow-hidden">
-                <div className="w-full h-full bg-[url('https://lh3.googleusercontent.com/aida-public/AB6AXuDsosudcwCY5QKdyp69ViEOnR-GrXmZ7H_hLAP9lcBNImyvtW9hgkkpEL69h0WVRZmxad815CVE5xBwQNAwFxW_VFQ5dvF6gKThOc1-SP7W4YwoL9Xcv7E1_v4Td40CH8JHeZDWa99kveqBW1ixf9h9RiMMROs1J_neCb-W-C-OqBMKVjDQVKmgubUHo4MuHkoCFt3_M0ims4Bjj8w4QLsXH88QEuM_G78YeWYIBexrAh0z5_XwaCb__lUD4VfDTNTYf_x3yhsJgak')] bg-cover bg-center"></div>
-              </div>
-              <div className="w-10 h-10 rounded-full border-[3px] border-[#fdfaf9] bg-green-100 flex shadow-sm items-center justify-center overflow-hidden">
-                <div className="w-full h-full bg-[url('https://lh3.googleusercontent.com/aida-public/AB6AXuANW7lZ3J_DX60v6NO6K79ImJA48hyMBhEy2IQfWgs2dieMWq2tJEeN9jtlY_vrD7sbKbJe5Jvq74kWnWMJxH2kdbdUpXRhsoMYqKBOTTb5tdqPfZKx4y5PGybbX1sccJA67Pv_jZW742PqtthDz4r-WCM9fu_yo4HSVZiafN5iv9Bdj1cOcAXAbbUps0FYr8zvjhonyFZHOZcm3D--x0y8UgqPEbUIlFSMmIJIUl8ap5-v26RXDM9mpKJ63I9N8L9QuJAu5jmzzYU')] bg-cover bg-center"></div>
-              </div>
-              <div className="w-10 h-10 rounded-full border-[3px] border-[#fdfaf9] relative z-10 bg-medical-red flex shadow-sm items-center justify-center text-[11px] text-white font-bold tracking-tight">+12k</div>
-            </div>
-            <div className="text-[13px] sm:text-sm text-slate-500 font-semibold tracking-wide">Joined the mission this month</div>
-          </div>
         </div>
 
         {/* Right Section (Login Card) */}
@@ -211,16 +195,16 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-      </main>
+      </main >
 
       {/* Footer Links */}
-      <footer className="absolute bottom-6 md:bottom-10 w-full px-6 flex justify-between items-center text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#9ca3af] z-10">
+      < footer className="absolute bottom-6 md:bottom-10 w-full px-6 flex justify-between items-center text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#9ca3af] z-10" >
         <div className="flex gap-6 sm:gap-8 lg:px-6">
           <Link className="hover:text-medical-red transition-colors" href="/privacy">Privacy Policy</Link>
           <Link className="hover:text-medical-red transition-colors" href="/terms">Terms of Service</Link>
         </div>
         <div className="lg:px-6 hidden sm:block">© 2024 Blood Connect HQ. All rights reserved.</div>
-      </footer>
-    </div>
+      </footer >
+    </div >
   );
 }
