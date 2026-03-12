@@ -363,10 +363,10 @@ export default function DashboardPage() {
     };
 
     const handleDeleteRequest = async (requestId: string) => {
-        if (!confirm("Are you sure you want to delete this request? Doing so will remove it permanently and clear any related notifications.")) return;
+        if (!confirm("Are you sure you want to delete this request? Doing so will remove it permanently.")) return;
         try {
             const req = requests.find(r => r.id === requestId);
-            const { doc, deleteDoc, collection, query, where, getDocs, writeBatch, serverTimestamp, addDoc } = await import("firebase/firestore");
+            const { doc, deleteDoc, collection, serverTimestamp, addDoc } = await import("firebase/firestore");
 
             // Log the deletion
             await addDoc(collection(db, "DeletionLogs"), {
@@ -377,35 +377,13 @@ export default function DashboardPage() {
                 deletedAt: serverTimestamp()
             });
 
-            // Delete notifications for this request in batch across all matching donors
-            if (req && req.bloodGroup) {
-                const donorsQuery = query(
-                    collection(db, "Users"),
-                    where("isRegisteredDonor", "==", true),
-                    where("bloodGroup", "==", req.bloodGroup)
-                );
-                const donorsSnapshot = await getDocs(donorsQuery);
-
-                if (!donorsSnapshot.empty) {
-                    const batch = writeBatch(db);
-                    donorsSnapshot.forEach((donorDoc) => {
-                        if (donorDoc.id !== req.requesterId) {
-                            // Since we created Notifications with the RequestID as the doc ID!
-                            const notificationRef = doc(db, `Users/${donorDoc.id}/Notifications`, requestId);
-                            batch.delete(notificationRef);
-                        }
-                    });
-                    await batch.commit();
-                }
-            }
-
             // Delete the request itself
             await deleteDoc(doc(db, "Requests", requestId));
 
-            alert("Request permanently deleted and notifications cleared.");
+            alert("Request permanently deleted.");
         } catch (e: any) {
             console.error("Delete failed:", e);
-            alert(e.message);
+            alert("Delete failed: " + e.message);
         }
     };
 
