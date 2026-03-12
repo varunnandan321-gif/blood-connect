@@ -604,60 +604,64 @@ export default function DashboardPage() {
             </section>
 
             {/* Navigation Pills */}
-            <nav className="flex justify-start md:justify-center gap-3 overflow-x-auto nav-scrollbar py-2 px-4 w-full max-w-5xl mx-auto mb-2 relative z-10">
-                <button
-                    onClick={() => setActiveTab("feed")}
-                    className={`${activeTab === "feed" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
-                >
-                    Active Emergencies
-                </button>
-                <button
-                    onClick={() => setActiveTab("my-requests")}
-                    className={`${activeTab === "my-requests" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
-                >
-                    My Requests
-                </button>
-                <button
-                    onClick={() => setActiveTab("matches")}
-                    className={`${activeTab === "matches" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
-                >
-                    My Matches
-                </button>
-                <button
-                    onClick={() => setActiveTab("messages")}
-                    className={`${activeTab === "messages" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0 relative`}
-                >
-                    Messages
-                    {chats.length > 0 && <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-400 rounded-full animate-ping border border-white"></span>}
-                </button>
-                <button
-                    onClick={() => setActiveTab("notifications")}
-                    className={`${activeTab === "notifications" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0 relative`}
-                >
-                    Alerts
-                    {notifications.filter(n => !n.read).length > 0 && <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-400 rounded-full animate-ping border border-white"></span>}
-                </button>
-                <button
-                    onClick={() => setActiveTab("facilities")}
-                    className={`${activeTab === "facilities" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
-                >
-                    Hospitals & Banks
-                </button>
-                <button
-                    onClick={() => setActiveTab("profile")}
-                    className={`${activeTab === "profile" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
-                >
-                    Donor Profile
-                </button>
-                {isAdmin && (
-                    <button
-                        onClick={() => setActiveTab("admin")}
-                        className={`${activeTab === "admin" ? "bg-gradient-to-r from-gray-700 to-gray-900 text-white shadow-glow-sm" : "glass-button text-red-700 font-bold hover:bg-red-50/80 border-red-200"} px-5 py-2 rounded-full text-sm whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
-                    >
-                        Admin Panel
-                    </button>
-                )}
-            </nav>
+            <div className="w-full relative z-10 mb-2">
+                <div className="w-full overflow-x-auto nav-scrollbar pb-4 px-4 sm:px-6">
+                    <nav className="flex items-center justify-start md:justify-center gap-3 w-max min-w-full max-w-5xl mx-auto pb-2">
+                        <button
+                            onClick={() => setActiveTab("feed")}
+                            className={`${activeTab === "feed" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
+                        >
+                            Active Emergencies
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("my-requests")}
+                            className={`${activeTab === "my-requests" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
+                        >
+                            My Requests
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("matches")}
+                            className={`${activeTab === "matches" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
+                        >
+                            My Matches
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("messages")}
+                            className={`${activeTab === "messages" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0 relative`}
+                        >
+                            Messages
+                            {chats.length > 0 && <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-400 rounded-full animate-ping border border-white"></span>}
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("notifications")}
+                            className={`${activeTab === "notifications" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0 relative`}
+                        >
+                            Alerts
+                            {notifications.filter(n => !n.read).length > 0 && <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-400 rounded-full animate-ping border border-white"></span>}
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("facilities")}
+                            className={`${activeTab === "facilities" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
+                        >
+                            Hospitals & Banks
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("profile")}
+                            className={`${activeTab === "profile" ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-sm" : "glass-button text-gray-700 hover:bg-white/80"} px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
+                        >
+                            Donor Profile
+                        </button>
+                        {isAdmin && (
+                            <button
+                                onClick={() => setActiveTab("admin")}
+                                className={`${activeTab === "admin" ? "bg-gradient-to-r from-gray-700 to-gray-900 text-white shadow-glow-sm" : "glass-button text-red-700 font-bold hover:bg-red-50/80 border-red-200"} px-5 py-2 rounded-full text-sm whitespace-nowrap flex items-center gap-2 transition-all shrink-0`}
+                            >
+                                Admin Panel
+                            </button>
+                        )}
+                    </nav>
+                </div>
+            </div>
 
             <AnimatePresence mode="popLayout">
 
