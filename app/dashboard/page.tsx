@@ -61,6 +61,7 @@ export default function DashboardPage() {
     });
     const [updatingProfile, setUpdatingProfile] = useState(false);
     const [allUsers, setAllUsers] = useState<any[]>([]);
+    const [availableDonorCount, setAvailableDonorCount] = useState<number>(0);
 
     // Notification State
     const [notifications, setNotifications] = useState<any[]>([]);
@@ -111,6 +112,16 @@ export default function DashboardPage() {
             }
         });
 
+        return () => unsubscribe();
+    }, [user]);
+
+    // Real-time count of available donors for stats
+    useEffect(() => {
+        if (!user) return;
+        const q = query(collection(db, "Users"), where("available", "==", true));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            setAvailableDonorCount(snapshot.size);
+        });
         return () => unsubscribe();
     }, [user]);
 
@@ -512,7 +523,7 @@ export default function DashboardPage() {
                             <div className="w-1 h-2 bg-red-300 rounded-full"></div>
                         </div>
                         <h3 className="text-sm text-gray-600 font-medium mb-1">Available Donors:</h3>
-                        <p className="text-4xl font-bold text-gray-900">{facilities.length > 0 ? facilities.length * 15 : 124}</p>
+                        <p className="text-4xl font-bold text-gray-900">{availableDonorCount}</p>
                     </div>
                     {/* Stat Card 3 */}
                     <div className="glass-panel rounded-2xl p-5 w-64 relative hover:-translate-y-1 transition-transform">
